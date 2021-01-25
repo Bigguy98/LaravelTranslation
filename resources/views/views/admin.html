@@ -1,0 +1,78 @@
+<!-- HEADER -->
+<nav class="navbar navbar-inverse">
+	<ul class="nav navbar-nav pull-right" style="color: #9d9d9d">
+		<li><a ui-sref="user">Menu User</a></li>
+		<li><a ui-sref="logout">Menu logout</a></li>
+	</ul>
+</nav>
+<div class="container-fluidt">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="col-md-6">
+				<span>Add user</span>
+				<form class="form-inline" id="addUserForm" name="addUserForm" ng-submit="addUser()">
+					<div class="form-group">
+						<input class="form-control" name="username" ng-model="user.username" placeholder="username" required>
+						<input class="form-control" name="password" ng-model="user.password" placeholder="password" required>
+						<button type="submit" ng-disabled="addUserForm.username.$invalid || addUserForm.password.$invalid" class="btn btn-default">Add</button>
+					</div>
+					<div class="form-group">
+						<span ng-show="addUserForm.username.$touched && addUserForm.username.$invalid">The name is required.</span><br>
+						<span ng-show="addUserForm.password.$touched && addUserForm.password.$invalid">The password is required.</span>
+					</div>
+					<div class="form-group">
+						<span ng-show="message">Username exist.</span><br>
+					</div>
+				</form>
+			</div>
+			<div class="col-md-6">
+				<span>Add language</span>
+				<form class="form-inline" id="addLanguageForm" name="addLanguageForm" ng-submit="addLanguage()">
+					<div class="form-group">
+						<input class="form-control" name="title" ng-pattern="/[A-Z]{1}[a-z\s]*$/" ng-model="language.title" placeholder="language" required>
+						<button type="submit" ng-disabled="addLanguageForm.title.$invalid || addLanguageForm.title.$error.pattern" class="btn btn-default">Add</button>
+					</div>
+				</form>
+				<div class="form-group">
+					<span ng-show="addLanguageForm.title.$touched && addLanguageForm.title.$invalid">The title is required.</span><br>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12" style="overflow-x: auto">
+			<table class="table table-responsive" style="margin-top: 50px;">
+				<thead>
+				<tr>
+					<th></th>
+					<th></th>
+					<th ng-repeat-start="permission in users[0].permission">{{::permission.lang_title + ' edit'}}</th>
+					<th ng-repeat-end>{{ ::permission.lang_title + ' view' }}</th>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th></th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat="user in users">
+					<td>
+						<input class="form-control" ng-model="user.username">
+					</td>
+					<td>
+						<input class="form-control" ng-model="user.password">
+					</td>
+					<td ng-repeat-start="permission in user.permission">
+						<input type="checkbox"  ng-model="permission.edit" ng-true-value="1" ng-false-value="0">
+					</td>
+					<td ng-repeat-end>
+						<input type="checkbox" ng-model="permission.view" ng-true-value="1" ng-false-value="0">
+					</td>
+					<td><button type="button" ng-click="toggleView(user.id)" class="btn btn-default">view all/none</button></td>
+					<td><button type="button" ng-click="toggleEdit(user.id)" class="btn btn-default">edit all/none</button></td>
+					<td><button type="button" ng-click="updateUser(user.id)" class="btn btn-default">update</button></td>
+					<td><button type="button" ng-click="deleteUser(user.id)" class="btn btn-default">delete</button></td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

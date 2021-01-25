@@ -1,0 +1,70 @@
+<nav class="navbar navbar-inverse">
+	<ul class="nav navbar-nav pull-right" style="color: #9d9d9d">
+		<li ng-show="{{ currentUser.role_id == 1 }}"><a ui-sref="home">Menu Admin</a></li>
+		<li><a ui-sref="logout">Menu logout</a></li>
+		<li>
+			<div style="padding: 15px">
+				<input type="checkbox" ng-model="autoSave" ng-true-value="1" ng-false-value="0" style="margin-right: 15px;">
+				<span>enable auto save</span>
+			</div>
+		</li>
+	</ul>
+</nav>
+
+<div class="container-fluidt">
+	<div ng-hide="data || message">Loading...</div>
+	<div ng-show="message">Don`t have any permissions</div>
+
+	<div ng-hide="!data" class="col-md-12" ng-repeat="language in data" st-table="language.data">
+		<div style="overflow-x: scroll;">
+			<div class="h3 text-left">{{language.language}}</div>
+			<table  class="table table-striped">
+				<thead>
+				<tr>
+					<th class="text-center" ng-hide="key == 'lang'" ng-repeat="(key, value) in language.data[0]">
+						{{ key }}
+					</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat="langRow in language.data">
+					<td ng-hide="key == 'lang'" ng-repeat="(key, value) in langRow">
+						<div class="table-div" ng-if="key == 'id' || key == 'text' || currentUser.newPermission[language.language].edit == 0">
+							{{ value}}
+						</div>
+						<textarea ng-click="getPopoveerContent(language.language, key, langRow.id, langRow)"
+								  ng-if="$index > 2 && currentUser.newPermission[language.language].edit == 1"
+								  uib-popover-template="dynamicPopover.templateUrl"
+								  popover-placement="{{dynamicPopover.placement}}"
+								  popover-trigger="'outsideClick'"
+								  class="form-control"
+								  ng-focus="focus($event)"
+								  ng-blur="blur($event)"
+								  ng-model="langRow[key]">
+						</textarea>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="my-paginator" st-pagination="" st-items-by-page="20" st-displayed-pages="15"></div>
+	</div>
+
+</div>
+
+<script type="text/ng-template" id="translatePopoverTemplate.html">
+	<div class="other-translate">
+		<div ng-repeat="item in translate">
+			<div class="m-t-5" ng-repeat="(key, value) in item">
+				<strong>{{key}}:</strong> {{value.translate}}
+			</div>
+		</div>
+	</div>
+
+	<div class="pop-content">
+		<button type="button" class="btn btn-default" ng-hide="autoSave" ng-click="saveChanges()">save changes in current field</button>
+		<button type="button" class="btn btn-default" ng-click="syncColors(['Yellow'])">update all software containing yellow in name</button>
+		<button type="button" class="btn btn-default" ng-click="syncColors(['White'])">update all software containing white in name</button>
+		<button type="button" class="btn btn-default" ng-click="syncColors(['White', 'Yellow'])">update all software containing white and yellow in name</button>
+	</div>
+</script>
