@@ -13,11 +13,11 @@ class Language extends Model {
 
 	public function getLanguage($user) {
 		$langId = array();
+
 		foreach ($user['permission'] as $key => $permission) {
 			if ($permission->view) {
 				array_push($langId, $permission->language_id);
 			}
-
 		}
 
 		if (count($langId) > 0) {
@@ -27,7 +27,7 @@ class Language extends Model {
 		}
 	}
 
-	public function language($langId) {
+	private function language($langId) {
 		sort($langId);
 		return $this::select('lang_title')->whereIn('id', $langId)->get();
 	}

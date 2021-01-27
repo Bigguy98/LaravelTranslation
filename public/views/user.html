@@ -1,11 +1,11 @@
 <nav class="navbar navbar-inverse">
 	<ul class="nav navbar-nav pull-right" style="color: #9d9d9d">
-		<li ng-show="{{ currentUser.role_id == 1 }}"><a ui-sref="home">Menu Admin</a></li>
-		<li><a ui-sref="logout">Menu logout</a></li>
+		<li ng-show="{{ currentUser.role_id == 1 }}"><a ui-sref="home">Admin section</a></li>
+		<li><a ui-sref="logout">Logout</a></li>
 		<li>
 			<div style="padding: 15px">
 				<input type="checkbox" ng-model="autoSave" ng-true-value="1" ng-false-value="0" style="margin-right: 15px;">
-				<span>enable auto save</span>
+				<span>Enable auto save</span>
 			</div>
 		</li>
 	</ul>

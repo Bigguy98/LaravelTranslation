@@ -24,15 +24,31 @@ class SqliteLang extends Model {
 		}
 	}
 
-	public function getTranslation($data) {
+	public function getTranslation($data, $user_id) {
 		$translates = [];
 		$tables = $data->permission;
 		$permission = [];
+
 		foreach ($tables as $language) {
-			if ($language->view && $language->lang_title != $data->lang) {
-				array_push($permission, (object) array(
-					'language' => $language->lang_title,
-				));
+			if ($user_id != 1) {
+				if ($language->view == 1 && $language->lang_title != $data->lang) {
+					array_push($permission, (object) array(
+						'language' => $language->lang_title,
+					));
+				} else {
+					if ($language->view == 1 && $language->edit == 1 && $language->lang_title == $data->lang) {
+						array_push($permission, (object) array(
+							'language' => $language->lang_title,
+						));
+					}
+				}
+			}
+			if ($user_id == 1) {
+				if ($language->lang_title != $data->lang) {
+					array_push($permission, (object) array(
+						'language' => $language->lang_title,
+					));
+				}
 			}
 		}
 

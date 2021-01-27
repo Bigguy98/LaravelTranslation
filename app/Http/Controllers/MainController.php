@@ -21,7 +21,7 @@ class MainController extends Controller {
 			return response()->json(json_encode($user));
 		}
 
-		return $this->makeErrorResponse("Can't Login!");
+		return $this->makeErrorResponse("Login failure!");
 	}
 
 	public function languageByUser(Request $request, $userId) {
@@ -30,20 +30,26 @@ class MainController extends Controller {
 		if (!empty($user)) {
 			$user = $this->putSessionUser($request, $user);
 			$language = new Language();
+
 			$result = $language->getLanguage($user);
+
+			if (!isset($result[1])) {
+				//$result[1] = $result[0];
+			}
+
 			if (empty($result)) {
-				return $this->makeErrorResponse('No Languages');
+				return $this->makeErrorResponse('No available languages');
 			}
 
 			$data = $sqlite->getDataByUser($result);
 			if (empty($data)) {
-				return $this->makeErrorResponse('Something wrong with sqlite Languages');
+				return $this->makeErrorResponse('Something went wrong with sqlite languages');
 			}
 
 			return $this->makeResponse($data);
 		}
 
-		return $this->makeErrorResponse("User Don't exist");
+		return $this->makeErrorResponse("User does not exists");
 	}
 
 	public function isAuthenticate(Request $request) {
@@ -51,7 +57,7 @@ class MainController extends Controller {
 			return $this->makeSuccessResponse();
 		}
 
-		return $this->makeErrorResponse('No Authenticate!');
+		return $this->makeErrorResponse('No authenticated');
 	}
 
 	public function language(Request $request) {
@@ -60,12 +66,12 @@ class MainController extends Controller {
 		$userPermission = new Permission();
 		$id = $language->addLang($title);
 		if (is_null($id)) {
-			return 'Something wrong with sqlite Languages';
+			return 'Something went wrong with sqlite languages';
 		}
 
 		$result = $userPermission->addUserPermission($id);
 		if (!$result) {
-			return 'Something wrong with sqlite createUserPermission';
+			return 'Something went wrong with sqlite createUserPermission';
 		}
 
 		return response()->json($result);
@@ -76,7 +82,7 @@ class MainController extends Controller {
 		$sqlite = new SqliteLang();
 		$data = $sqlite->getTableNames();
 		if (empty($data)) {
-			return 'Something wrong with sqlite languages';
+			return 'Something went wrong with sqlite languages';
 		}
 
 		return $this->makeResponse($data);
@@ -86,7 +92,7 @@ class MainController extends Controller {
 		$user = new User();
 		$users = $user->getAll();
 		if (empty($users)) {
-			return 'Something wrong with users';
+			return 'Something went wrong with users';
 		}
 
 		$obj = array();
@@ -124,7 +130,7 @@ class MainController extends Controller {
 			}
 		}
 
-		return $this->makeErrorResponse('Something went wrong!');
+		return $this->makeErrorResponse('Something went wrong with user create');
 	}
 
 	public function deleteUser(Request $req) {
@@ -149,7 +155,7 @@ class MainController extends Controller {
 			return $this->makeSuccessResponse();
 		}
 
-		return $this->makeErrorResponse('Something wrong');
+		return $this->makeErrorResponse('Something went wrong with user update');
 	}
 
 	public function currentUser(Request $request) {
@@ -163,7 +169,7 @@ class MainController extends Controller {
 			}
 		}
 
-		return $this->makeErrorResponse('Error');
+		return $this->makeErrorResponse('Failed to retrieve current user');
 	}
 
 	public function refreshDB(Request $req) {
@@ -189,7 +195,7 @@ class MainController extends Controller {
 
 	}
 
-	function popOver(Request $req) {
+	public function popOver(Request $req) {
 		$currentUser = (object) [];
 		if ($req->session()->has('currentUser')) {
 			$currentUser = $req->session()->get('currentUser');
@@ -201,7 +207,6 @@ class MainController extends Controller {
 			if ($req->lang != $title->name) {
 				array_push($table, $title->name);
 			}
-
 		}
 
 		$req->table = $table;
@@ -209,15 +214,16 @@ class MainController extends Controller {
 			$req->permission = $currentUser->permission;
 		}
 
-		$translations = $sqlite->getTranslation($req);
+		$translations = $sqlite->getTranslation($req, $currentUser->role_id);
+
 		if (!empty($translations)) {
 			return $this->makeResponse($translations);
 		}
 
-		return $this->makeErrorResponse('Someting went wrong');
+		return $this->makeErrorResponse('Someting went wrong with English version retrieving');
 	}
 
-	function saveCollors(Request $req) {
+	public function saveCollors(Request $req) {
 		$data = (object) $req->data;
 		$sqlite = new SqliteLang();
 		if ($sqlite->updateDate($data)) {
@@ -227,7 +233,7 @@ class MainController extends Controller {
 		return $this->makeErrorResponse('Something wrong');
 	}
 
-	function updateTranslate(Request $req) {
+	public function updateTranslate(Request $req) {
 		$data = (object) $req->data;
 		$sqlite = new SqliteLang();
 		if ($sqlite->updateTranslate($data)) {
@@ -258,7 +264,7 @@ class MainController extends Controller {
 		return $user;
 	}
 
-	function getUserById($id) {
+	private function getUserById($id) {
 		return User::find($id);
 	}
 
@@ -271,15 +277,15 @@ class MainController extends Controller {
 			->get();
 	}
 
-	function makeResponse($data) {
+	private function makeResponse($data) {
 		return response()->json(json_encode($data));
 	}
 
-	function makeErrorResponse($msg) {
+	private function makeErrorResponse($msg) {
 		return response()->json(['error' => $msg], 500);
 	}
 
-	function makeSuccessResponse() {
+	private function makeSuccessResponse() {
 		return response()->json(['result' => true], 200);
 	}
 }
