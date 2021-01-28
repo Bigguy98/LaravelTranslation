@@ -140,7 +140,7 @@ angular.module('UserCtrl', []).controller('UserController', function($scope, $ht
 						$scope.data = data;
 					}
 				}, function(err) {
-					// console.log(err);
+
 				});
 	};
 	$scope.languages();

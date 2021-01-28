@@ -21,7 +21,7 @@ class MainController extends Controller {
 			return response()->json(json_encode($user));
 		}
 
-		return $this->makeErrorResponse("Login failure!");
+		return $this->makeResponse("");
 	}
 
 	public function languageByUser(Request $request, $userId) {

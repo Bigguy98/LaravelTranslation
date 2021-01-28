@@ -24,6 +24,10 @@ a {
   color: #00B7FF;
 }
 
+.navbar .nav{
+  color: #9d9d9d;
+}
+
 .refresh {
   color: #9d9d9d;
   line-height: 20px;
@@ -38,10 +42,6 @@ a {
   background-color: transparent;
 }
 
-.m-t-5 {
-  margin: 5px;
-}
-s
 .popover {
   min-width: 500px;
 }
@@ -57,4 +57,12 @@ s
 .my-paginator {
   display: flex;
   justify-content: center;
+}
+
+.scroll{
+  overflow-x: auto;
+}
+
+.table-responsive{
+  margin-top: 50px;
 }
