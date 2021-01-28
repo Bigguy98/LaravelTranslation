@@ -36,7 +36,7 @@ angular.module('UserCtrl', []).controller('UserController', function($scope, $ht
 
 	$scope.message = null;
 
-	$scope.autoSave = 0;
+	$scope.autoSave = 1;
 
 	$scope.getPopoveerContent = function (lang, col, id, curentValue) {
 		$scope.currentValue = curentValue;

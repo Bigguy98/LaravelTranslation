@@ -2,16 +2,24 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-td { text-align: center; }
-table input { padding: 0 5px 0 10px; }
+td {
+  text-align: center;
+}
 
-tbody .form-control { min-width: 100px; }
+table input {
+  padding: 0 5px 0 10px;
+}
+
+tbody .form-control {
+  min-width: 100px;
+}
 
 textarea.form-control {
   min-width: 250px;
   min-height: 70px;
   font-size: 12px;
 }
+
 a {
   color: #00B7FF;
 }
@@ -26,16 +34,27 @@ a {
 
 .refresh:hover {
   cursor: pointer;
-   color: #fff;
-   background-color: transparent;
- }
+  color: #fff;
+  background-color: transparent;
+}
 
-.m-t-5 { margin-top: 5px; }
+.m-t-5 {
+  margin: 5px;
+}
+s
+.popover {
+  min-width: 500px;
+}
 
-.popover { min-width: 500px; }
-.pop-content { margin-top: 25px; }
-.pop-content > button { margin-bottom: 10px; }
+.pop-content {
+  margin-top: 25px;
+}
+
+.pop-content > button {
+  margin-bottom: 10px;
+}
 
 .my-paginator {
-    display: flex;
-    justify-content: center; }
+  display: flex;
+  justify-content: center;
+}
