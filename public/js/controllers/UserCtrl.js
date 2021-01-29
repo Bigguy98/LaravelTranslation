@@ -21,7 +21,7 @@ angular.module('UserCtrl', []).controller('UserController', function($scope, $ht
 		};
 	}
 
-	$scope.itemsByPage=15;
+	$scope.itemsByPage=5;
 
 	$scope.rowCollection = [];
 	for (var j = 0; j < 200; j++) {
