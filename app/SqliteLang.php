@@ -36,7 +36,11 @@ class SqliteLang extends Model {
 						'language' => $language->lang_title,
 					));
 				} else {
-					if ($language->view == 1 && $language->edit == 1 && $language->lang_title == $data->lang) {
+					if ($language->view == 1 && $language->edit == 1 && $language->lang_title != $data->lang) {
+						array_push($permission, (object) array(
+							'language' => $language->lang_title,
+						));
+					} else if ($language->view == 1 && $language->edit == 1 && 'English' == $data->lang) {
 						array_push($permission, (object) array(
 							'language' => $language->lang_title,
 						));
