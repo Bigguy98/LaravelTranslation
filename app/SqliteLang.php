@@ -97,7 +97,7 @@ class SqliteLang extends Model {
 
 	public function updateTranslate($data) {
 		$row = DB::connection('sqlite')->table($data->lang)
-			->where('id', '=', $data->id)
+			->where('text', '=', $data->text)
 			->update([$data->col => $data->value]);
 		return true;
 	}
