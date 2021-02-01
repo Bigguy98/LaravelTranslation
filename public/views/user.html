@@ -6,7 +6,7 @@
 </nav>
 <div class="container-fluidt">
 	<div ng-hide="data || message">Loading...</div>
-	<div ng-show="message">The current user doesn't have any permissions.</div>
+	<div ng-show="message">The current user doesn't have any permissions</div>
 	<div ng-hide="!data" class="col-md-12" ng-repeat="language in data" st-table="language.data">
 		<div class="scroll">
 			<div class="h3 text-left">{{language.language}}</div>
@@ -24,7 +24,7 @@
 							<div class="table-div" ng-if="key == 'id' || key == 'text' || currentUser.newPermission[language.language].edit == 0">
 								{{ value}}
 							</div>
-							<textarea ng-click="getPopoveerContent(language.language, key, langRow.id, langRow)"
+							<textarea ng-click="getPopoveerContent(language.language, key, langRow.text, langRow)"
 							ng-if="$index > 2 && currentUser.newPermission[language.language].edit == 1"
 							uib-popover-template="dynamicPopover.templateUrl"
 							popover-placement="{{dynamicPopover.placement}}"

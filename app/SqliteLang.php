@@ -58,7 +58,7 @@ class SqliteLang extends Model {
 
 		foreach ($permission as $language) {
 			$title = $language->language;
-			$query = "SELECT `" . $data->col . "` FROM " . $title . " WHERE id=" . $data->id . ";";
+			$query = "SELECT `" . $data->col . "` FROM " . $title . " WHERE `text`='" . $data->text . "';";
 			$row = DB::connection('sqlite')->select($query);
 			$row1 = (array) $row[0];
 			$obj = (object) [];
