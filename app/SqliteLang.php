@@ -78,22 +78,6 @@ class SqliteLang extends Model {
 		return $translates;
 	}
 
-	public function getClearData($langTitle) {
-		$data = [];
-		for ($i = 0; $i < count($langTitle); $i++) {
-			$query = "SELECT '" . $langTitle[$i]->lang_title . "' as lang, * FROM " . $langTitle[$i]->lang_title . ";";
-			$all = DB::connection('sqlite')->select($query);
-			if (!empty($all)) {
-				array_push($data, array(
-					'language' => $all[0]->lang,
-					'data' => $all,
-				));
-			}
-		}
-
-		return $data;
-	}
-
 	public function updateDate($data) {
 		$tmp = $data;
 		$id = $data->id;
@@ -140,6 +124,22 @@ class SqliteLang extends Model {
 		}
 
 		return NULL;
+	}
+
+	private function getClearData($langTitle) {
+		$data = [];
+		for ($i = 0; $i < count($langTitle); $i++) {
+			$query = "SELECT '" . $langTitle[$i]->lang_title . "' as lang, * FROM " . $langTitle[$i]->lang_title . ";";
+			$all = DB::connection('sqlite')->select($query);
+			if (!empty($all)) {
+				array_push($data, array(
+					'language' => $all[0]->lang,
+					'data' => $all,
+				));
+			}
+		}
+
+		return $data;
 	}
 
 }

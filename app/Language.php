@@ -15,7 +15,7 @@ class Language extends Model {
 		$langId = array();
 
 		foreach ($user['permission'] as $key => $permission) {
-			if ($permission->view) {
+			if ($permission->edit) {
 				array_push($langId, $permission->language_id);
 			}
 		}
