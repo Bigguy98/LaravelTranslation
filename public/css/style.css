@@ -26,6 +26,7 @@ a {
 
 .navbar .nav{
   color: #9d9d9d;
+  margin: 0px;
 }
 
 .refresh {
@@ -40,10 +41,6 @@ a {
   cursor: pointer;
   color: #fff;
   background-color: transparent;
-}
-
-.popover {
-  min-width: 500px;
 }
 
 .pop-content {
@@ -66,3 +63,28 @@ a {
 .table-responsive{
   margin-top: 50px;
 }
+
+@media (max-width:767.98px) {
+  .main-data-table tr td, .main-data-table tr th{
+    display: none;
+  }
+
+  .main-data-table tr td:last-child, .main-data-table tr th:last-child{
+    display: table-cell;
+  }
+
+  .col-sm-12{
+    padding: 0px;
+  }
+
+  .ml15{
+    margin-left: 15px;
+  }
+}
+
+@media (min-width:768px) {
+  .popover {
+    min-width: 500px;
+  } 
+}
+

@@ -5,22 +5,22 @@
 	</ul>
 </nav>
 <div class="container-fluidt">
-	<div ng-hide="data || message">Loading...</div>
-	<div ng-show="message">The current user doesn't have any permissions</div>
-	<div ng-hide="!data" class="col-md-12" ng-repeat="language in data" st-table="language.data">
+	<div class="col-sm-12 ml15" ng-hide="data || message">Loading...</div>
+	<div class="col-sm-12 ml15" ng-show="message">The current user doesn't have any permissions</div>
+	<div ng-hide="!data" class="col-sm-12" ng-repeat="language in data" st-table="language.data">
 		<div class="scroll">
-			<div class="h3 text-left">{{language.language}}</div>
-			<table class="table table-striped">
+			<div class="h3 ml15 text-left">{{language.language}}</div>
+			<table class="table table-striped main-data-table">
 				<thead>
 					<tr>
-						<th class="text-center" ng-hide="key == 'lang'" ng-repeat="(key, value) in language.data[0]">
+						<th class="text-center main-table-cell" ng-hide="key == 'lang'" ng-repeat="(key, value) in language.data[0]">
 							{{ key }}
 						</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="langRow in language.data">
-						<td ng-hide="key == 'lang'" ng-repeat="(key, value) in langRow">
+						<td class="main-table-cell" ng-hide="key == 'lang'" ng-repeat="(key, value) in langRow">
 							<div class="table-div" ng-if="key == 'id' || key == 'text' || currentUser.newPermission[language.language].edit == 0">
 								{{ value}}
 							</div>
