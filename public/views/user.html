@@ -6,7 +6,7 @@
 </nav>
 <div class="container-fluidt">
 	<div ng-hide="data || message">Loading...</div>
-	<div ng-show="message">Don`t have any permissions</div>
+	<div ng-show="message">The current user doesn't have any permissions.</div>
 	<div ng-hide="!data" class="col-md-12" ng-repeat="language in data" st-table="language.data">
 		<div class="scroll">
 			<div class="h3 text-left">{{language.language}}</div>

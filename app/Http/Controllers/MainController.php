@@ -33,12 +33,8 @@ class MainController extends Controller {
 
 			$result = $language->getLanguage($user);
 
-			if (!isset($result[1])) {
-				//$result[1] = $result[0];
-			}
-
 			if (empty($result)) {
-				return $this->makeErrorResponse('No available languages');
+				return $this->makeResponse("");
 			}
 
 			$data = $sqlite->getDataByUser($result);
