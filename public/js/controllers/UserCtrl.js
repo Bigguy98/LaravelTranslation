@@ -38,10 +38,10 @@ angular.module('UserCtrl', []).controller('UserController', function($scope, $ht
 
 	$scope.autoSave = 1;
 
-	$scope.getPopoveerContent = function (lang, col, text, curentValue) {
+	$scope.getPopoveerContent = function (lang, col, key, curentValue) {
 		$scope.currentValue = curentValue;
 
-		var data = { lang:lang, col: col, text: text};
+		var data = { lang:lang, col: col, key: key};
 		$scope.currentItem = data;
 		$http.post('/popover', data).then(function (res) {
 			if(res) $scope.translate = JSON.parse(res.data);

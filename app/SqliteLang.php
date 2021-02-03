@@ -58,7 +58,7 @@ class SqliteLang extends Model {
 
 		foreach ($permission as $language) {
 			$title = $language->language;
-			$query = "SELECT `" . $data->col . "` FROM " . $title . " WHERE `text`='" . $data->text . "';";
+			$query = "SELECT `" . $data->col . "` FROM " . $title . " WHERE `key`='" . $data->key . "';";
 			$row = DB::connection('sqlite')->select($query);
 			$row1 = (array) $row[0];
 			$obj = (object) [];
@@ -97,7 +97,7 @@ class SqliteLang extends Model {
 
 	public function updateTranslate($data) {
 		$row = DB::connection('sqlite')->table($data->lang)
-			->where('text', '=', $data->text)
+			->where('key', '=', $data->key)
 			->update([$data->col => $data->value]);
 		return true;
 	}

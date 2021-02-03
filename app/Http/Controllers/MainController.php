@@ -192,6 +192,7 @@ class MainController extends Controller {
 	}
 
 	public function popOver(Request $req) {
+
 		$currentUser = (object) [];
 		if ($req->session()->has('currentUser')) {
 			$currentUser = $req->session()->get('currentUser');
