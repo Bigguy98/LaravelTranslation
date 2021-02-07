@@ -33,6 +33,9 @@ Route::post('/user/del', 'MainController@deleteUser');
 Route::post('/refresh-db', 'MainController@refreshDB');
 
 Route::post('/popover', 'MainController@popOver');
-Route::post('save-collors', "MainController@saveCollors");
+Route::post('/save-collors', "MainController@saveCollors");
 Route::post('/update-translate', 'MainController@updateTranslate');
 
+Route::get('/list-of-hidden-rows', 'MainController@listOfHiddenRows');
+Route::post('/hide-row', "MainController@hideRow");
+Route::post('/show-row', "MainController@showRow");

@@ -13,16 +13,17 @@
 			<table class="table table-striped main-data-table">
 				<thead>
 					<tr>
-						<th class="text-center main-table-cell" ng-hide="key == 'lang'" ng-repeat="(key, value) in language.data[0]">
+						<th class="text-center main-table-cell" ng-hide="key == 'lang' || key == 'visible'" ng-repeat="(key, value) in language.data[0]">
 							{{ key }}
 						</th>
+						<th ng-show="{{ currentUser.role_id == 1 }}"></th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="langRow in language.data">
-						<td class="main-table-cell" ng-hide="key == 'lang'" ng-repeat="(key, value) in langRow">
+						<td class="main-table-cell" ng-hide="key == 'lang' || key == 'visible'" ng-repeat="(key, value) in langRow">
 							<div class="table-div" ng-if="key == 'id' || key == 'key' || currentUser.newPermission[language.language].edit == 0">
-								{{ value}}
+								{{ value }}
 							</div>
 							<textarea ng-click="getPopoveerContent(language.language, key, langRow.key, langRow)"
 							ng-if="$index > 2 && currentUser.newPermission[language.language].edit == 1"
@@ -32,14 +33,20 @@
 							class="form-control"
 							ng-focus="focus($event)"
 							ng-blur="blur($event)"
-							ng-model="langRow[key]">
+							ng-model="langRow[key]"
+							ng-hide="key == 'visible' || langRow.visible == 0" >
 							</textarea>
+						</td>
+						<td ng-show="{{ currentUser.role_id == 1 }}" >
+							<button type="button" ng-show="{{ langRow.visible == 1 }}" ng-click="hideRow(langRow.key)" class="btn btn-default">Hide</button>
+							<button type="button" ng-show="{{ langRow.visible == 0 }}" ng-click="showRow(langRow.key)" class="btn btn-default">Show</button>
 						</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-		<div class="my-paginator" st-pagination="" st-items-by-page="20" st-displayed-pages="5"></div>
+		<div ng-show="{{ currentUser.role_id == 1 }}" class="my-paginator" st-pagination="" st-items-by-page="20" st-displayed-pages="100"></div>
+		<div ng-show="{{ currentUser.role_id == 2 }}" class="my-paginator" st-pagination="" st-items-by-page="20" st-displayed-pages="5"></div>
 	</div>
 </div>
 <script type="text/ng-template" id="translatePopoverTemplate.html">

@@ -1,33 +1,5 @@
 angular.module('UserCtrl', []).controller('UserController', function($scope, $http, $rootScope, $sessionStorage) {
 
-	var
-		nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa'],
-		familyName = ['Dupont', 'Germain', 'Delcourt', 'bjip', 'Menez'];
-
-	function createRandomItem() {
-		var
-			firstName = nameList[Math.floor(Math.random() * 4)],
-			lastName = familyName[Math.floor(Math.random() * 4)],
-			age = Math.floor(Math.random() * 100),
-			email = firstName + lastName + '@whatever.com',
-			balance = Math.random() * 3000;
-
-		return {
-			firstName: firstName,
-			lastName: lastName,
-			age: age,
-			email: email,
-			balance: balance
-		};
-	}
-
-	$scope.itemsByPage=5;
-
-	$scope.rowCollection = [];
-	for (var j = 0; j < 200; j++) {
-		$scope.rowCollection.push(createRandomItem());
-	}
-
 	$scope.translate = null;
 	$scope.currentItem = null;
 	$scope.currentValue = null;
@@ -35,7 +7,6 @@ angular.module('UserCtrl', []).controller('UserController', function($scope, $ht
 	$scope.originalTarget = null;
 
 	$scope.message = null;
-
 	$scope.autoSave = 1;
 
 	$scope.getPopoveerContent = function (lang, col, key, curentValue) {
@@ -128,12 +99,11 @@ angular.module('UserCtrl', []).controller('UserController', function($scope, $ht
 				console.log('update field failure ', err);
 			});
 	};
-    //
+    
 	$scope.languages = function () {
 		$http.get('/language-by-user/'+$rootScope.currentUser.id)
 			.then(function(res) {
 					var data = JSON.parse(res.data);
-				console.log(data);
 					if(!data) {
 						$scope.message = true;
 					} else {
@@ -142,8 +112,27 @@ angular.module('UserCtrl', []).controller('UserController', function($scope, $ht
 				}, function(err) {
 
 				});
+
 	};
 	$scope.languages();
+
+	$scope.hideRow = function(key){
+        $http.post('/hide-row', {key: key})
+            .then(function (res) {
+                $scope.languages();
+            }, function (err) {
+                console.error(err);
+            });
+	}
+
+	$scope.showRow = function(key){
+		$http.post('/show-row', {key: key})
+			.then(function (res) {
+                $scope.languages();
+			}, function (err) {
+                console.error(err);
+			});
+	}
 
 
 });

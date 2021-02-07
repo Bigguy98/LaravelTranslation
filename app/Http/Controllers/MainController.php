@@ -7,6 +7,7 @@ use App\Permission;
 use App\Role;
 use App\SqliteLang;
 use App\User;
+use App\HiddenRow;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -37,7 +38,9 @@ class MainController extends Controller {
 				return $this->makeResponse("");
 			}
 
-			$data = $sqlite->getDataByUser($result);
+			$hiddenRows = json_decode($this->listOfHiddenRows());
+
+			$data = $sqlite->getDataByUser($result,$hiddenRows,$user->id);
 			if (empty($data)) {
 				return $this->makeErrorResponse('Something went wrong with sqlite languages');
 			}
@@ -46,6 +49,21 @@ class MainController extends Controller {
 		}
 
 		return $this->makeErrorResponse("User does not exists");
+	}
+
+	public function listOfHiddenRows(){
+		$hiddenRows = [];
+
+		$rows = HiddenRow::get(['key']);
+		   $keys = collect($rows)->map(function ($item, $key) {
+                return $item->key;
+        })->toArray();
+
+		foreach ($rows as $key => $item) {
+			$hiddenRows[] = $item->key;
+		}   
+
+		return json_encode($hiddenRows);
 	}
 
 	public function isAuthenticate(Request $request) {
@@ -272,6 +290,16 @@ class MainController extends Controller {
 			->where('UserPermission.user_id', '=', $uid)
 			->orderBy('UserPermission.language_id')
 			->get();
+	}
+
+	public function hideRow(Request $request) {
+		HiddenRow::firstOrCreate(['key' => $request->key]);
+		return $this->makeSuccessResponse();
+	}
+
+	public function showRow(Request $request) {
+		HiddenRow::where('key', $request->key)->delete();
+		return $this->makeSuccessResponse();
 	}
 
 	private function makeResponse($data) {

@@ -117,8 +117,8 @@ class SqliteLang extends Model {
 		return $tmp;
 	}
 
-	public function getDataByUser($langTitle) {
-		$tables = $this->getClearData($langTitle);
+	public function getDataByUser($langTitle,$hiddenRows,$user_id) {
+		$tables = $this->getClearData($langTitle,$hiddenRows,$user_id);
 		if (!empty($tables)) {
 			return $tables;
 		}
@@ -126,16 +126,38 @@ class SqliteLang extends Model {
 		return NULL;
 	}
 
-	private function getClearData($langTitle) {
+	private function getClearData($langTitle,$hiddenRows,$user_id) {
 		$data = [];
+		$extension = '';
+		if ($user_id != 1) {
+			if(!empty($hiddenRows)){
+				$extension = "WHERE `key` NOT IN (";
+				foreach ($hiddenRows as $item) {
+					$extension .= "'" . $item . "',";
+				}
+				$extension .= ")";
+				$extension = str_replace("',)", "')", $extension);
+			}
+		}
+		
 		for ($i = 0; $i < count($langTitle); $i++) {
-			$query = "SELECT '" . $langTitle[$i]->lang_title . "' as lang, * FROM " . $langTitle[$i]->lang_title . ";";
+			$query = "SELECT '" . $langTitle[$i]->lang_title . "' as lang, * FROM " . $langTitle[$i]->lang_title . " " .$extension. " ;";
 			$all = DB::connection('sqlite')->select($query);
+			
 			if (!empty($all)) {
 				array_push($data, array(
 					'language' => $all[0]->lang,
 					'data' => $all,
 				));
+			}
+			if ($user_id == 1) {
+				for ($i=0; $i < count($data[0]['data']); $i++) { 
+					if(in_array($data[0]['data'][$i]->key, $hiddenRows)){
+						$data[0]['data'][$i]->visible = 0;
+					}else{
+						$data[0]['data'][$i]->visible = 1;
+					}
+				}
 			}
 		}
 
