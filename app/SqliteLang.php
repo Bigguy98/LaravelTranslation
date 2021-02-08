@@ -140,24 +140,32 @@ class SqliteLang extends Model {
 			}
 		}
 		
-		for ($i = 0; $i < count($langTitle); $i++) {
-			$query = "SELECT '" . $langTitle[$i]->lang_title . "' as lang, * FROM " . $langTitle[$i]->lang_title . " " .$extension. " ;";
+		for ($k = 0; $k < count($langTitle); $k++) {
+			$query = "SELECT '" . $langTitle[$k]->lang_title . "' as lang, * FROM " . $langTitle[$k]->lang_title . " " .$extension. " ;";
 			$all = DB::connection('sqlite')->select($query);
-			
+
+			$total = 0;
+			$visible = 0;
+
 			if (!empty($all)) {
-				array_push($data, array(
-					'language' => $all[0]->lang,
-					'data' => $all,
-				));
-			}
-			if ($user_id == 1) {
-				for ($i=0; $i < count($data[0]['data']); $i++) { 
-					if(in_array($data[0]['data'][$i]->key, $hiddenRows)){
-						$data[0]['data'][$i]->visible = 0;
-					}else{
-						$data[0]['data'][$i]->visible = 1;
+				if ($user_id == 1) {
+					for ($i=0; $i < count($all); $i++) { 
+						if(in_array($all[$i]->key, $hiddenRows)){
+							$all[$i]->visible = 0;
+						}else{
+							$all[$i]->visible = 1;
+							$visible = $visible + str_word_count($all[$i]->translation);
+						}
+						$total = $total + str_word_count($all[$i]->translation);
 					}
 				}
+
+				array_push($data, array(
+					'language' => $all[0]->lang,
+					'total' => $total,
+					'visible' => $visible,
+					'data' => $all,
+				));
 			}
 		}
 

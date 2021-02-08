@@ -9,7 +9,14 @@
 	<div class="col-sm-12 ml15" ng-show="message">The current user doesn't have any permissions</div>
 	<div ng-hide="!data" class="col-sm-12" ng-repeat="language in data" st-table="language.data">
 		<div class="scroll">
-			<div class="h3 ml15 text-left">{{language.language}}</div>
+			<div class="ml15">
+				<div class="h3 text-left pull-left">
+					{{language.language}}
+				</div>
+				<div ng-show="{{ currentUser.role_id == 1 }}" class="text-right mt30 pull-right">
+					Total words: {{language.total}} / visible words: {{language.visible}}
+				</div>
+			</div>
 			<table class="table table-striped main-data-table">
 				<thead>
 					<tr>

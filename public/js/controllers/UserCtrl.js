@@ -1,13 +1,11 @@
 angular.module('UserCtrl', []).controller('UserController', function($scope, $http, $rootScope, $sessionStorage) {
 
+	$scope.message = null;
 	$scope.translate = null;
 	$scope.currentItem = null;
 	$scope.currentValue = null;
 	$scope.originalValue = null;
 	$scope.originalTarget = null;
-
-	$scope.message = null;
-	$scope.autoSave = 1;
 
 	$scope.getPopoveerContent = function (lang, col, key, curentValue) {
 		$scope.currentValue = curentValue;
@@ -75,17 +73,14 @@ angular.module('UserCtrl', []).controller('UserController', function($scope, $ht
 		var targetValue = e.target.value;
 
 		if($scope.originalValue != targetValue) {
-			if($scope.autoSave) {
-				$scope.currentItem.value = targetValue;
-				$http.post('/update-translate', {data: $scope.currentItem})
-					.then(function (res) {
-						if(res) console.log('field updated');
-						else console.log('update field failure');
-					}, function (err) {
-						console.log('update field failure ', err);
-					});
-			}
-
+			$scope.currentItem.value = targetValue;
+			$http.post('/update-translate', {data: $scope.currentItem})
+				.then(function (res) {
+					if(res) console.log('field updated');
+					else console.log('update field failure');
+				}, function (err) {
+					console.log('update field failure ', err);
+				});
 		}
 	};
 
@@ -103,15 +98,15 @@ angular.module('UserCtrl', []).controller('UserController', function($scope, $ht
 	$scope.languages = function () {
 		$http.get('/language-by-user/'+$rootScope.currentUser.id)
 			.then(function(res) {
-					var data = JSON.parse(res.data);
-					if(!data) {
-						$scope.message = true;
-					} else {
-						$scope.data = data;
-					}
-				}, function(err) {
+				var data = JSON.parse(res.data);
+				if(!data) {
+					$scope.message = true;
+				} else {
+					$scope.data = data;
+				}
+			}, function(err) {
 
-				});
+			});
 
 	};
 	$scope.languages();
