@@ -1,6 +1,7 @@
 <?php
 namespace App;
 
+use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -95,10 +96,12 @@ class SqliteLang extends Model {
 		return true;
 	}
 
-	public function updateTranslate($data) {
-		$row = DB::connection('sqlite')->table($data->lang)
+	public function updateTranslation($data) {
+		$language = trim(str_replace('@iqualif.com', '', Auth::user()->email));
+
+		$row = DB::connection('sqlite')->table($language)
 			->where('key', '=', $data->key)
-			->update([$data->col => $data->value]);
+			->update(['translation' => $data->translation]);
 		return true;
 	}
 
@@ -118,15 +121,6 @@ class SqliteLang extends Model {
 	}
 
 	public function getDataByUser($langTitle,$hiddenRows,$user_id) {
-		$tables = $this->getClearData($langTitle,$hiddenRows,$user_id);
-		if (!empty($tables)) {
-			return $tables;
-		}
-
-		return NULL;
-	}
-
-	private function getClearData($langTitle,$hiddenRows,$user_id) {
 		$data = [];
 		$extension = '';
 		if ($user_id != 1) {
@@ -141,31 +135,36 @@ class SqliteLang extends Model {
 		}
 		
 		for ($k = 0; $k < count($langTitle); $k++) {
-			$query = "SELECT '" . $langTitle[$k]->lang_title . "' as lang, * FROM " . $langTitle[$k]->lang_title . " " .$extension. " ;";
+			$query = "SELECT '" . $langTitle[$k] . "' as lang, * FROM " . $langTitle[$k] . " " .$extension. " ;";
 			$all = DB::connection('sqlite')->select($query);
 
 			$total = 0;
 			$visible = 0;
 
 			if (!empty($all)) {
-				if ($user_id == 1) {
-					for ($i=0; $i < count($all); $i++) { 
-						if(in_array($all[$i]->key, $hiddenRows)){
-							$all[$i]->visible = 0;
-						}else{
-							$all[$i]->visible = 1;
-							$visible = $visible + str_word_count($all[$i]->translation);
-						}
-						$total = $total + str_word_count($all[$i]->translation);
+			
+				for ($i=0; $i < count($all); $i++) { 
+					if(in_array($all[$i]->key, $hiddenRows)){
+						$all[$i]->visible = 0;
+					}else{
+						$all[$i]->visible = 1;
+						$visible = $visible + str_word_count($all[$i]->translation);
 					}
+					$total = $total + str_word_count($all[$i]->translation);
 				}
 
-				array_push($data, array(
-					'language' => $all[0]->lang,
-					'total' => $total,
-					'visible' => $visible,
-					'data' => $all,
-				));
+				$languages = [];
+
+				foreach ($all as $key => $value) {
+					$languages[$value->key] = [
+						'translation' => $value->translation,
+						'visible' => $value->visible
+					];
+				}
+
+				if(!isset($data[$langTitle[$k]])){
+					$data[$langTitle[$k]] = $languages;
+				}
 			}
 		}
 

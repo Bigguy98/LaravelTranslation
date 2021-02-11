@@ -12,13 +12,14 @@ use App\Http\Controllers\MainController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-View::addExtension('html', 'php');
 
-Route::get('/', function () {
-    return View::make('index');
-});
+Auth::routes();
 
-Route::post('/login', 'MainController@login');
+Route::get('/', 'HomeController@index');
+Route::get('/home', 'HomeController@index')->name('home');
+Route::post('/update-translation', 'HomeController@updateTranslation')->name('update');
+
+
 
 Route::get('/language-by-user/{userId}', 'MainController@languageByUser');
 Route::post('/currentUser', 'MainController@currentUser');
@@ -34,8 +35,7 @@ Route::post('/refresh-db', 'MainController@refreshDB');
 
 Route::post('/popover', 'MainController@popOver');
 Route::post('/save-collors', "MainController@saveCollors");
-Route::post('/update-translate', 'MainController@updateTranslate');
 
-Route::get('/list-of-hidden-rows', 'MainController@listOfHiddenRows');
 Route::post('/hide-row', "MainController@hideRow");
 Route::post('/show-row', "MainController@showRow");
+
