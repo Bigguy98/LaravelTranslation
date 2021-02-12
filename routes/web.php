@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\View;
-use App\Http\Controllers\MainController;
+use App\Http\Controllers\AdminController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,27 +15,31 @@ use App\Http\Controllers\MainController;
 
 Auth::routes();
 
+//User section routes
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/update-translation', 'HomeController@updateTranslation')->name('update');
 
+//Admin authentication routes
+Route::get('/admin', function(){return view('admin');});
+Route::post('/admin-login', 'AdminController@adminLogin');
+
+//User management routes
+Route::get('/user', 'AdminController@getUser');
 
 
-Route::get('/language-by-user/{userId}', 'MainController@languageByUser');
-Route::post('/currentUser', 'MainController@currentUser');
+Route::get('/language-by-user/{userId}', 'AdminController@languageByUser');
+Route::post('/currentUser', 'AdminController@currentUser');
+Route::get('/isAuthenticate', 'AdminController@isAuthenticate');
+Route::post('/language', 'AdminController@language');
+Route::get('/language/list', 'AdminController@languageList');
 
-Route::get('/isAuthenticate', 'MainController@isAuthenticate');
-Route::post('/language', 'MainController@language');
-Route::get('/language/list', 'MainController@languageList');
-Route::get('/user', 'MainController@getUser');
-Route::post('/user', 'MainController@addUser');
-Route::put('/user', 'MainController@updateUser');
-Route::post('/user/del', 'MainController@deleteUser');
-Route::post('/refresh-db', 'MainController@refreshDB');
+Route::post('/user', 'AdminController@addUser');
+Route::put('/user', 'AdminController@updateUser');
+Route::post('/user/del', 'AdminController@deleteUser');
+Route::post('/refresh-db', 'AdminController@refreshDB');
+Route::post('/popover', 'AdminController@popOver');
 
-Route::post('/popover', 'MainController@popOver');
-Route::post('/save-collors', "MainController@saveCollors");
-
-Route::post('/hide-row', "MainController@hideRow");
-Route::post('/show-row', "MainController@showRow");
+Route::post('/hide-row', "AdminController@hideRow");
+Route::post('/show-row', "AdminController@showRow");
 

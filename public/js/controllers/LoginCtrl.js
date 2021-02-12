@@ -9,7 +9,7 @@ angular.module('LoginCtrl', []).controller('LoginController', function($scope, $
 
 	$scope.login = function () {
 		$scope.message = false;
-		$http.post('/login', $scope.user).then(function (res) {
+		$http.post('/admin-login', $scope.user).then(function (res) {
 			var data = JSON.parse(res.data);
 			if(data) {
 				$sessionStorage.currentUser = data;

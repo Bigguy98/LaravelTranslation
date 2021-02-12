@@ -85,40 +85,6 @@ angular.module('MainCtrl', []).controller('MainController', function($scope, $ht
 			}, $scope.errorCallback);
 	};
 
-	$scope.toggleEdit = function (id) {
-		_.forEach($scope.users, function (user) {
-			if(user.id == id) {
-				var allTrue = false;
-				_.forEach(user.permission, function (perm) {
-					if(perm.edit) allTrue = true;
-				});
-				_.forEach(user.permission, function (perm) {
-					if(!allTrue) perm.edit = 1;
-					else perm.edit = 0;
-				});
-
-				allTrue = !allTrue;
-			}
-		});
-	};
-
-	$scope.toggleView = function (id) {
-		_.forEach($scope.users, function (user) {
-			if(user.id == id) {
-				var allTrue = false;
-				_.forEach(user.permission, function (perm) {
-					if(perm.view) allTrue = true;
-				});
-				_.forEach(user.permission, function (perm) {
-					if(!allTrue) perm.view = 1;
-					else perm.view = 0;
-				});
-
-				allTrue = !allTrue;
-			}
-		});
-	};
-
 	$scope.clearUserForm = function () {
 		$scope.addUserForm.$setUntouched();
 		$scope.addUserForm.$setPristine();

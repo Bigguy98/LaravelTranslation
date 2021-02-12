@@ -2,7 +2,7 @@ angular.module('appRoutes', ['ui.router', 'ngStorage'])
 	.run(function ($rootScope, $sessionStorage, $http) {
 		$rootScope.currentUser = $sessionStorage.currentUser;
 		if($rootScope.currentUser) {
-			$http.post('/currentUser', { username: $rootScope.currentUser.username }).then(
+			$http.post('/currentUser', { name: $rootScope.currentUser.name }).then(
 				function (result) {
 					var currentUser = JSON.parse(result.data);
 					$rootScope.currentUser = currentUser;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Hash;
 use App\Language;
 use App\Permission;
 use App\Role;
@@ -11,11 +12,11 @@ use App\HiddenRow;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class MainController extends Controller {
+class AdminController extends Controller {
 
-	public function login(Request $request) {
-		$user = $this->getUserByUsername($request->username);
-		if (!empty($user) && $user['password'] == $request->password) {
+	public function adminLogin(Request $request) {
+		$user = $this->getUserByname($request->name);
+		if (!empty($user) && $user->password == $request->password) {
 
 			$user = $this->putSessionUser($request, $user);
 
@@ -98,50 +99,27 @@ class MainController extends Controller {
 		if (empty($data)) {
 			return 'Something went wrong with sqlite languages';
 		}
-
 		return $this->makeResponse($data);
 	}
 
 	public function getUser() {
-		$user = new User();
-		$users = $user->getAll();
+		$users = User::get();
 		if (empty($users)) {
 			return 'Something went wrong with users';
 		}
-
-		$obj = array();
-
-		foreach ($users as $user) {
-			$permission = $this->getPermission($user->id);
-			$user->permission = $permission;
-			array_push($obj, $user);
-		};
-		return $this->makeResponse($obj);
+		return $this->makeResponse($users);
 	}
 
-	public function addUser(Request $req) {
-		$username = $req->username;
-		$password = $req->password;
+	public function addUser(Request $request) {
 
-		$res = $this->getUserByUsername($username);
-		if (empty($res)) {
-			$userId = User::insertGetId([
-				'username' => $username,
-				'password' => $password,
-				'role_id' => 2,
-			]);
+		$user = User::create([
+		    'name' => $request->name,
+			'password' => Hash::make($request->password),
+			'email' => $request->email
+		]);
 
-			$languages = Language::all();
-			if (!empty($languages)) {
-				$obj = (object) [];
-				$obj->languages = $languages;
-				$obj->userId = $userId;
-
-				$perms = new Permission();
-				if ($perms->createUserPermission($obj)) {
-					return $this->makeResponse(['result' => true]);
-				}
-			}
+		if ($user->save()) {
+			return $this->makeResponse(['result' => true]);
 		}
 
 		return $this->makeErrorResponse('Something went wrong with user create');
@@ -158,24 +136,20 @@ class MainController extends Controller {
 		}
 	}
 
-	public function updateUser(Request $req) {
-		$user = new User();
-		$aff1 = $user->updateUser($req);
-
-		$permission = new Permission();
-
-		$aff2 = $permission->updatePermission($req);
-		if ($aff1 || $aff2) {
+	public function updateUser(Request $request) {
+		$user = User::find($request->id);
+		$user->name = $request->name;
+		$user->email = $request->email;
+		if ($user->save()) {
 			return $this->makeSuccessResponse();
 		}
-
 		return $this->makeErrorResponse('Something went wrong with user update');
 	}
 
 	public function currentUser(Request $request) {
-		$username = $request->username;
-		if (!empty($username)) {
-			$user = $this->getUserByUsername($username);
+		$name = $request->name;
+		if (!empty($name)) {
+			$user = $this->getUserByname($name);
 			if (!empty($user)) {
 				$user = $this->putSessionUser($request, $user);
 
@@ -238,16 +212,6 @@ class MainController extends Controller {
 		return $this->makeErrorResponse('Someting went wrong with English version retrieving');
 	}
 
-	public function saveCollors(Request $req) {
-		$data = (object) $req->data;
-		$sqlite = new SqliteLang();
-		if ($sqlite->updateDate($data)) {
-			return $this->makeSuccessResponse();
-		}
-
-		return $this->makeErrorResponse('Something wrong');
-	}
-
 	public function updateTranslate(Request $req) {
 		$data = (object) $req->data;
 		$sqlite = new SqliteLang();
@@ -259,23 +223,23 @@ class MainController extends Controller {
 	}
 
 	public function putSessionUser($request, $user) {
-		unset($user['password']);
+		unset($user->password);
 		$permissions = $this->getPermission($user->id);
 		$obj = array();
 		foreach ($permissions as $val) {
 			$obj[$val->lang_title] = array('view' => $val->view, 'edit' => $val->edit, 'id' => $val->language_id);
 		}
 
-		$user['permission'] = $permissions;
-		$user['newPermission'] = $obj;
+		$user->permission = $permissions;
+		$user->newPermission = $obj;
 
 		$request->session()->put('currentUser', $user);
 
 		return $user;
 	}
 
-	private function getUserByUsername($username) {
-		$user = User::where('username', $username)->first();
+	private function getUserByname($name) {
+		$user = DB::table('User')->where('name', $name)->first();
 		return $user;
 	}
 
