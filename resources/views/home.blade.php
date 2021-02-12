@@ -9,6 +9,7 @@
                     <thead>
                         <tr>
                             <th class="text-center main-table-cell" >Index</th>
+                            <th class="text-center main-table-cell toggle hidden" >Key</th>
                             <th class="text-center main-table-cell" >Original</th>
                             <th class="text-center main-table-cell" >Translation</th>
                         </tr>
@@ -19,6 +20,9 @@
                         <tr >
                             <td class="main-table-cell" >
                                 {{$loop->index+1}}
+                            </td>
+                            <td class="main-table-cell toggle hidden" >
+                                {{$key}}
                             </td>
                             <td class="main-table-cell">
                                 <div class="form-control">{{$data['English'][$key]['translation']}}</div>
@@ -37,4 +41,6 @@
         </div>
     </div>
 </div>
+<button class="btn btn-warning btn-key btn-show-keys ">Show keys</button>
+<button class="btn btn-success btn-key btn-hide-keys hidden">Hide keys</button>
 @endsection
