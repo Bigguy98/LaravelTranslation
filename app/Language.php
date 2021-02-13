@@ -37,7 +37,7 @@ class Language extends Model {
 			'table' => 'Languages',
 			'title' => $title,
 		);
-		$id = $this->addLanguage($obj);
+		$id = $this::insertGetId(['lang_title' => $title]);
 		$sqlite = new SqliteLang();
 		if ($id) {
 			$resLite = $sqlite->createLanguage($title);
@@ -49,27 +49,6 @@ class Language extends Model {
 		return NULL;
 	}
 
-	public function addLanguage($data) {
-		$id = $this::insertGetId(['lang_title' => $data['title']]);
-		return $id;
-	}
-
-	public function initDrop() {
-		$langIds = $this::select('id')->orderBy('id', 'ASC')
-			->get();
-
-		if (!empty($langIds)) {
-			$arr = [];
-			foreach ($langIds as $id) {
-				array_push($arr, $id);
-			}
-			DB::delete('DELETE FROM Languages WHERE id IN ?', $arr);
-			return true;
-		}
-
-		return false;
-	}
-
 	public function initLang($langs) {
 		$insertIds = [];
 		foreach ($langs as $language) {
@@ -78,5 +57,10 @@ class Language extends Model {
 		}
 
 		return $insertIds;
+	}
+
+	public static function getLanguageId($title){
+		$record = Language::select('id')->where('lang_title', $title)->first();
+		return isset($record->id) ? $record->id : null;
 	}
 }

@@ -27,7 +27,7 @@ class AdminController extends Controller {
 	}
 
 	public function languageByUser(Request $request, $userId) {
-		$user = $this->getUserById($userId);
+		$user = User::find($userId);
 		$sqlite = new SqliteLang();
 		if (!empty($user)) {
 			$user = $this->putSessionUser($request, $user);
@@ -75,6 +75,18 @@ class AdminController extends Controller {
 		return $this->makeErrorResponse('No authenticated');
 	}
 
+	public function languageList() {
+		$sqlite = new SqliteLang();
+		$data = $sqlite->getTableNames();
+		for ($i=0; $i < count($data); $i++) { 
+			$data[$i]->id = Language::getLanguageId($data[$i]->name);
+		}
+		if (empty($data)) {
+			return 'Something went wrong with sqlite languages';
+		}
+		return $this->makeResponse($data);
+	}
+
 	public function language(Request $request) {
 		$title = $request->title;
 		$language = new Language();
@@ -93,13 +105,24 @@ class AdminController extends Controller {
 
 	}
 
-	public function languageList() {
-		$sqlite = new SqliteLang();
-		$data = $sqlite->getTableNames();
-		if (empty($data)) {
-			return 'Something went wrong with sqlite languages';
+	public function updateLanguage(Request $request) {
+		$language = Language::find($request->id);
+		SqliteLang::renameTable($language->lang_title,$request->name);
+		$language->lang_title = $request->name;
+		if ($language->save()) {
+			return $this->makeSuccessResponse();
 		}
-		return $this->makeResponse($data);
+		return $this->makeErrorResponse('Something went wrong with language update');
+	}
+
+	public function deleteLanguage(Request $request) {
+		try {
+			Language::where('lang_title',$request->name)->delete();
+			SqliteLang::dropTable($request->name);
+			return $this->makeSuccessResponse();
+		} catch (Exception $e) {
+			return $this->makeErrorResponse($e->message);
+		}
 	}
 
 	public function getUser() {
@@ -125,17 +148,6 @@ class AdminController extends Controller {
 		return $this->makeErrorResponse('Something went wrong with user create');
 	}
 
-	public function deleteUser(Request $req) {
-		try {
-			$id = $req->userId;
-			$user = User::find($id);
-			$user->delete();
-			return $this->makeSuccessResponse();
-		} catch (Exception $e) {
-			return $this->makeErrorResponse($e->message);
-		}
-	}
-
 	public function updateUser(Request $request) {
 		$user = User::find($request->id);
 		$user->name = $request->name;
@@ -144,6 +156,16 @@ class AdminController extends Controller {
 			return $this->makeSuccessResponse();
 		}
 		return $this->makeErrorResponse('Something went wrong with user update');
+	}
+
+	public function deleteUser(Request $request) {
+		try {
+			$user = User::find($$request->userId);
+			$user->delete();
+			return $this->makeSuccessResponse();
+		} catch (Exception $e) {
+			return $this->makeErrorResponse($e->message);
+		}
 	}
 
 	public function refreshDB(Request $req) {
@@ -227,10 +249,6 @@ class AdminController extends Controller {
 	private function getUserByname($name) {
 		$user = DB::table('User')->where('name', $name)->first();
 		return $user;
-	}
-
-	private function getUserById($id) {
-		return User::find($id);
 	}
 
 	public function getPermission($uid) {

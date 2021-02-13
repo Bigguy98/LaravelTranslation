@@ -1,25 +1,6 @@
 angular.module('appRoutes', ['ui.router', 'ngStorage'])
 	.run(function ($rootScope, $sessionStorage, $http) {
 		$rootScope.currentUser = $sessionStorage.currentUser;
-		if($rootScope.currentUser) {
-			$http.post('/currentUser', { name: $rootScope.currentUser.name }).then(
-				function (result) {
-					var currentUser = JSON.parse(result.data);
-					$rootScope.currentUser = currentUser;
-
-					var obj = {};
-					_.forEach(currentUser.permission, function (value) {
-						var newObj = {};
-						newObj[value.lang_title] = { view: value.view, edit: value.edit, id: value.language_id };
-						_.assign(obj, newObj);
-					});
-					$rootScope.currentUser.newPermission = obj;
-					$sessionStorage.currentUser = $rootScope.currentUser;
-				}, function (bad) {
-					console.log('bad ', bad);
-				});
-		}
-
 	})
 	.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 		$stateProvider

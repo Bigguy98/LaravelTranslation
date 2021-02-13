@@ -40,6 +40,8 @@
 				</div>
 			</div>
 		</div>
+	</div>
+	<div class="row">
 		<div class="col-md-6 scroll">
 			<table class="table table-responsive">
 				<thead>
@@ -63,6 +65,31 @@
 					</td>
 					<td>
 						<button type="button" ng-click="deleteUser(user.id)" class="btn btn-default">delete</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="col-md-6 scroll">
+			<table class="table table-responsive">
+				<thead>
+				<tr>
+					<th></th>
+					<th></th>
+					<th></th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat="language in languages">
+					<td>
+						<input class="form-control" ng-model="language.name">
+					</td>
+					
+					<td ng-repeat-end>
+						<button type="button" ng-click="updateLanguage(language.name)" class="btn btn-default">update</button>
+					</td>
+					<td>
+						<button type="button" ng-click="deleteLanguage(language.name)" class="btn btn-default">delete</button>
 					</td>
 				</tr>
 				</tbody>

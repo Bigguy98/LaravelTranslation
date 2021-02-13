@@ -1,7 +1,9 @@
 <?php
 namespace App;
 
+
 use Auth;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -79,23 +81,6 @@ class SqliteLang extends Model {
 		return $translates;
 	}
 
-	public function updateDate($data) {
-		$tmp = $data;
-		$id = $data->id;
-		$lang = $data->lang;
-		$values = [];
-		unset($tmp->id);
-		unset($tmp->lang);
-
-		foreach ($tmp as $key => $value) {
-			array_push($values, '`' . $key . '` = "' . $value . '"');
-		}
-
-		$query = "UPDATE `" . $lang . "` SET " . join(', ', $values) . " WHERE id = $id;";
-		DB::connection('sqlite')->select($query);
-		return true;
-	}
-
 	public function updateTranslation($data) {
 		$language = trim(str_replace('@iqualif.com', '', Auth::user()->email));
 
@@ -169,6 +154,14 @@ class SqliteLang extends Model {
 		}
 
 		return $data;
+	}
+
+	public static function dropTable($table){
+		Schema::connection('sqlite')->dropIfExists($table);
+	}
+
+	public static function renameTable($old_table, $new_table){
+		Schema::connection('sqlite')->rename($old_table, $new_table);
 	}
 
 }

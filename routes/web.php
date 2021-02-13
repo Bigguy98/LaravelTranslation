@@ -30,15 +30,21 @@ Route::put('/user', 'AdminController@updateUser');
 Route::post('/user', 'AdminController@addUser');
 Route::post('/user/delete', 'AdminController@deleteUser');
 
+//Language management routes
+Route::get('/language/list', 'AdminController@languageList');
+Route::put('/language', 'AdminController@updateLanguage');
+Route::post('/language', 'AdminController@language');
+Route::post('/language/delete', 'AdminController@deleteLanguage');
+
+
+
+
+
 Route::get('/language-by-user/{userId}', 'AdminController@languageByUser');
 
 Route::get('/isAuthenticate', 'AdminController@isAuthenticate');
-Route::post('/language', 'AdminController@language');
-Route::get('/language/list', 'AdminController@languageList');
 
-Route::post('/user', 'AdminController@addUser');
-Route::put('/user', 'AdminController@updateUser');
-Route::post('/user/del', 'AdminController@deleteUser');
+
 Route::post('/refresh-db', 'AdminController@refreshDB');
 Route::post('/popover', 'AdminController@popOver');
 

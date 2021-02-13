@@ -20,7 +20,6 @@ angular.module('MainCtrl', []).controller('MainController', function($scope, $ht
 	$scope.getUser = function () {
 		$http.get('/user').then(function (res) {
 			$scope.users = JSON.parse(res.data);
-
 		}, $scope.errorCallback);
 	};
 
@@ -40,7 +39,6 @@ angular.module('MainCtrl', []).controller('MainController', function($scope, $ht
 
 		$http.post('/language', $scope.language)
 			.then(function (res) {
-
 				var result = JSON.parse(res.data);
 				if(result) {
 					$scope.init();
@@ -57,7 +55,6 @@ angular.module('MainCtrl', []).controller('MainController', function($scope, $ht
 				if(result) {
 					$scope.getlanguageList();
 					$scope.getUser();
-
 					$scope.clearUserForm();
 				} else {
 					$scope.message = true;
@@ -72,6 +69,12 @@ angular.module('MainCtrl', []).controller('MainController', function($scope, $ht
 			}, $scope.errorCallback);
 	};
 
+	$scope.deleteLanguage = function (name) {
+		$http.post('/language/delete', { name: name }).then(function (res) {
+				if(res) $scope.init();
+			}, $scope.errorCallback);
+	};
+
 	$scope.updateUser = function (id) {
 
 		var obj = {};
@@ -80,6 +83,19 @@ angular.module('MainCtrl', []).controller('MainController', function($scope, $ht
 		});
 
 		$http.put('/user', obj)
+			.then(function (res) {
+
+			}, $scope.errorCallback);
+	};
+
+	$scope.updateLanguage = function (name) {
+
+		var obj = {};
+		_.forEach($scope.languages, function (languages) {
+			if (languages.name == name) _.assign(obj, languages);
+		});
+
+		$http.put('/language', obj)
 			.then(function (res) {
 
 			}, $scope.errorCallback);
