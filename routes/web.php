@@ -26,10 +26,12 @@ Route::post('/admin-login', 'AdminController@adminLogin');
 
 //User management routes
 Route::get('/user', 'AdminController@getUser');
-
+Route::put('/user', 'AdminController@updateUser');
+Route::post('/user', 'AdminController@addUser');
+Route::post('/user/delete', 'AdminController@deleteUser');
 
 Route::get('/language-by-user/{userId}', 'AdminController@languageByUser');
-Route::post('/currentUser', 'AdminController@currentUser');
+
 Route::get('/isAuthenticate', 'AdminController@isAuthenticate');
 Route::post('/language', 'AdminController@language');
 Route::get('/language/list', 'AdminController@languageList');

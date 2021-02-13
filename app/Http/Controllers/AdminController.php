@@ -146,20 +146,6 @@ class AdminController extends Controller {
 		return $this->makeErrorResponse('Something went wrong with user update');
 	}
 
-	public function currentUser(Request $request) {
-		$name = $request->name;
-		if (!empty($name)) {
-			$user = $this->getUserByname($name);
-			if (!empty($user)) {
-				$user = $this->putSessionUser($request, $user);
-
-				return $this->makeResponse($user);
-			}
-		}
-
-		return $this->makeErrorResponse('Failed to retrieve current user');
-	}
-
 	public function refreshDB(Request $req) {
 		try {
 			$role = $req->role;

@@ -67,7 +67,7 @@ angular.module('MainCtrl', []).controller('MainController', function($scope, $ht
 
 	$scope.deleteUser = function (id) {
 
-		$http.post('/user/del', { userId: id }).then(function (res) {
+		$http.post('/user/delete', { userId: id }).then(function (res) {
 				if(res) $scope.getUser();
 			}, $scope.errorCallback);
 	};

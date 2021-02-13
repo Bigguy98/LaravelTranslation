@@ -6,13 +6,13 @@
 		<div class="col-md-3">
 			<form class="form-horizontal" name="loginForm" ng-submit="login()">
 				<div class="form-group">
-					<input class="form-control" name="username" placeholder="username" ng-model="user.username" required>
+					<input class="form-control" name="name" placeholder="name" ng-model="user.name" required>
 				</div>
 				<div class="form-group">
 					<input class="form-control" type="password" name="password" placeholder="password" ng-model="user.password" required>
 				</div>
 				<div class="form-group">
-					<button type="submit" ng-disabled="loginForm.username.$invalid || loginForm.password.$invalid" class="btn btn-default">Login</button>
+					<button type="submit" ng-disabled="loginForm.name.$invalid || loginForm.password.$invalid" class="btn btn-default">Login</button>
 				</div>
 			</form>
 		</div>
