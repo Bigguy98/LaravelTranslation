@@ -11,15 +11,15 @@ class SqliteLang extends Model {
 
 	protected $connection = 'sqlite';
 
-	public function getTableNames() {
+	public static function getTableNames() {
 		$names = DB::connection('sqlite')->select("SELECT name FROM sqlite_master WHERE type='table' AND name <> 'sqlite_stat3' AND name <> 'sqlite_stat1'");
 		return $names;
 	}
 
 	public function createLanguage($title) {
-		try
-		{
-			$table = DB::connection('sqlite')->select("CREATE TABLE " . $title . " AS SELECT * FROM English");
+		try {
+			DB::connection('sqlite')->select("CREATE TABLE `". $title . "` (`id` INTEGER, `key` TEXT UNIQUE, `translation` TEXT, PRIMARY KEY(id))");
+			DB::connection('sqlite')->select("INSERT INTO `". $title . "` SELECT * FROM English");
 			return true;
 		} catch (Exception $e) {
 			echo $e;
@@ -162,6 +162,12 @@ class SqliteLang extends Model {
 
 	public static function renameTable($old_table, $new_table){
 		Schema::connection('sqlite')->rename($old_table, $new_table);
+	}
+
+	public static function insertKey($table,$key){
+		DB::connection('sqlite')->table($table)->insert(
+		    ['key' => $key, 'translation' => '']
+		);
 	}
 
 }

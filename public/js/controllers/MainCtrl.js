@@ -48,6 +48,20 @@ angular.module('MainCtrl', []).controller('MainController', function($scope, $ht
 		}, $scope.errorCallback);
 	};
 
+	$scope.addKey = function () {
+
+		$http.post('/key', $scope.key)
+			.then(function (res) {
+				var result = JSON.parse(res.data);
+				if(result) {
+					$scope.init();
+					$scope.clearKeyForm();
+				}
+
+		}, $scope.errorCallback);
+	};
+
+
 	$scope.addUser = function () {
 		$http.post('/user', $scope.user)
 			.then(function (res) {
@@ -112,6 +126,12 @@ angular.module('MainCtrl', []).controller('MainController', function($scope, $ht
 		$scope.addLanguageForm.$setPristine();
 
 		document.getElementById('addLanguageForm').reset();
+	};
+	$scope.clearKeyForm= function () {
+		$scope.addKeyForm.$setUntouched();
+		$scope.addKeyForm.$setPristine();
+
+		document.getElementById('addKeyForm').reset();
 	};
 
 	$scope.errorCallback = function(err) { console.log(err); }

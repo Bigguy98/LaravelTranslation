@@ -75,9 +75,9 @@ class AdminController extends Controller {
 		return $this->makeErrorResponse('No authenticated');
 	}
 
+//--// Language section
 	public function languageList() {
-		$sqlite = new SqliteLang();
-		$data = $sqlite->getTableNames();
+		$data = SqliteLang::getTableNames();
 		for ($i=0; $i < count($data); $i++) { 
 			$data[$i]->id = Language::getLanguageId($data[$i]->name);
 		}
@@ -125,6 +125,7 @@ class AdminController extends Controller {
 		}
 	}
 
+//--// User section
 	public function getUser() {
 		$users = User::get();
 		if (empty($users)) {
@@ -168,17 +169,28 @@ class AdminController extends Controller {
 		}
 	}
 
+	public function addKey(Request $request) {
+		try {
+			$data = SqliteLang::getTableNames();
+			foreach ($data as $table) {
+				SqliteLang::insertKey($table->name, $request->title);
+			}
+			return $this->makeResponse(['result' => true]);
+		} catch (Exception $e) {
+			return $this->makeErrorResponse('Something went wrong with user create');
+		}
+	}
+
 	public function refreshDB(Request $req) {
 		try {
 			$role = $req->role;
 			if ($role) {
 				$language = new Language();
-				$sqlite = new SqliteLang();
 				$user = new User();
 				$permission = new Permission();
 
 				if ($language->initDrop()) {
-					$langs = $sqlite->getTableNames();
+					$langs = SqliteLang::getTableNames();
 					$ids = $language->initLang($langs);
 					$users = $user->users();
 					$res = $permission->initUP($users, $ids);
@@ -197,8 +209,8 @@ class AdminController extends Controller {
 		if ($req->session()->has('currentUser')) {
 			$currentUser = $req->session()->get('currentUser');
 		}
-		$sqlite = new SqliteLang();
-		$tables = $sqlite->getTableNames();
+
+		$tables = SqliteLang::getTableNames();
 		$table = [];
 		foreach ($tables as $title) {
 			if ($req->lang != $title->name) {

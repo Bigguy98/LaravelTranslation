@@ -28,15 +28,31 @@
 				</form>
 			</div>
 			<div class="col-md-6">
-				<span>Add language</span>
-				<form class="form-inline" id="addLanguageForm" name="addLanguageForm" ng-submit="addLanguage()">
-					<div class="form-group">
-						<input class="form-control" name="title" ng-pattern="/[A-Z]{1}[a-z\s]*$/" ng-model="language.title" placeholder="language" required>
-						<button type="submit" ng-disabled="addLanguageForm.title.$invalid || addLanguageForm.title.$error.pattern" class="btn btn-default">Add</button>
+				<div class="row">
+					<div class="col-md-6">
+						<span>Add language</span>
+						<form class="form-inline" id="addLanguageForm" name="addLanguageForm" ng-submit="addLanguage()">
+							<div class="form-group">
+								<input class="form-control" name="title" ng-pattern="/[A-Z]{1}[a-z\s]*$/" ng-model="language.title" placeholder="language" required>
+								<button type="submit" ng-disabled="addLanguageForm.title.$invalid || addLanguageForm.title.$error.pattern" class="btn btn-default">Add</button>
+							</div>
+						</form>
+						<div class="form-group">
+							<span ng-show="addLanguageForm.title.$touched && addLanguageForm.title.$invalid">The title is required.</span><br>
+						</div>
 					</div>
-				</form>
-				<div class="form-group">
-					<span ng-show="addLanguageForm.title.$touched && addLanguageForm.title.$invalid">The title is required.</span><br>
+					<div class="col-md-6">
+						<span>Add key</span>
+						<form class="form-inline" id="addKeyForm" name="addKeyForm" ng-submit="addKey()">
+							<div class="form-group">
+								<input class="form-control" name="title" ng-model="key.title" placeholder="Key" required>
+								<button type="submit" ng-disabled="addKeyForm.title.$invalid || addKeyForm.title.$error.pattern" class="btn btn-default">Add</button>
+							</div>
+						</form>
+						<div class="form-group">
+							<span ng-show="addKeyForm.title.$touched && addKeyForm.title.$invalid">The title is required.</span><br>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

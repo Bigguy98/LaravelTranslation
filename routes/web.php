@@ -36,8 +36,8 @@ Route::put('/language', 'AdminController@updateLanguage');
 Route::post('/language', 'AdminController@language');
 Route::post('/language/delete', 'AdminController@deleteLanguage');
 
-
-
+//Key management routes
+Route::post('/key', 'AdminController@addKey');
 
 
 Route::get('/language-by-user/{userId}', 'AdminController@languageByUser');
