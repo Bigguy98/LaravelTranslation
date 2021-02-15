@@ -16,7 +16,7 @@ class SqliteLang extends Model {
 		return $names;
 	}
 
-	public function createLanguage($title) {
+	public static function createLanguage($title) {
 		try {
 			DB::connection('sqlite')->select("CREATE TABLE `". $title . "` (`id` INTEGER, `key` TEXT UNIQUE, `translation` TEXT, PRIMARY KEY(id))");
 			DB::connection('sqlite')->select("INSERT INTO `". $title . "` SELECT * FROM English");
@@ -27,40 +27,11 @@ class SqliteLang extends Model {
 		}
 	}
 
-	public function getTranslation($data, $user_id) {
+	public static function getTranslation($data) {
 		$translates = [];
-		$tables = $data->permission;
-		$permission = [];
-
-		foreach ($tables as $language) {
-			if ($user_id != 1) {
-				if ($language->view == 1 && $language->lang_title != $data->lang) {
-					array_push($permission, (object) array(
-						'language' => $language->lang_title,
-					));
-				} else {
-					if ($language->view == 1 && $language->edit == 1 && $language->lang_title != $data->lang) {
-						array_push($permission, (object) array(
-							'language' => $language->lang_title,
-						));
-					} else if ($language->view == 1 && $language->edit == 1 && 'English' == $data->lang) {
-						array_push($permission, (object) array(
-							'language' => $language->lang_title,
-						));
-					}
-				}
-			}
-			if ($user_id == 1) {
-				if ($language->lang_title != $data->lang) {
-					array_push($permission, (object) array(
-						'language' => $language->lang_title,
-					));
-				}
-			}
-		}
-
+		$permission = self::getTableNames();
 		foreach ($permission as $language) {
-			$title = $language->language;
+			$title = $language->name;
 			$query = "SELECT `" . $data->col . "` FROM " . $title . " WHERE `key`='" . $data->key . "';";
 			$row = DB::connection('sqlite')->select($query);
 			$row1 = (array) $row[0];
@@ -77,11 +48,10 @@ class SqliteLang extends Model {
 
 			array_push($translates, $obj);
 		}
-
 		return $translates;
 	}
 
-	public function updateTranslation($data) {
+	public static function updateTranslation($data) {
 		$language = trim(str_replace('@iqualif.com', '', Auth::user()->email));
 
 		$row = DB::connection('sqlite')->table($language)
@@ -90,25 +60,10 @@ class SqliteLang extends Model {
 		return true;
 	}
 
-	public function getData($tables) {
-		$tmp = [];
-		for ($i = 0; $i < count($tables); $i++) {
-			$name = $tables[$i]->name;
-			$query = "SELECT $name as lang, * FROM $name";
-			$all = DB::connection('sqlite')->select($query);
-			array_push($tmp, array(
-				'language' => $all[0]->lang,
-				'data' => $all,
-			));
-		}
-
-		return $tmp;
-	}
-
-	public function getDataByUser($langTitle,$hiddenRows,$user_id) {
+	public static function getDataByUser($langTitle,$hiddenRows,$mode) {
 		$data = [];
 		$extension = '';
-		if ($user_id != 1) {
+		if($mode == 'user'){
 			if(!empty($hiddenRows)){
 				$extension = "WHERE `key` NOT IN (";
 				foreach ($hiddenRows as $item) {
@@ -138,21 +93,30 @@ class SqliteLang extends Model {
 					$total = $total + str_word_count($all[$i]->translation);
 				}
 
-				$languages = [];
+				if($mode == 'user'){
+					$languages = [];
 
-				foreach ($all as $key => $value) {
-					$languages[$value->key] = [
-						'translation' => $value->translation,
-						'visible' => $value->visible
-					];
-				}
+					foreach ($all as $key => $value) {
+						$languages[$value->key] = [
+							'translation' => $value->translation,
+							'visible' => $value->visible
+						];
+					}
 
-				if(!isset($data[$langTitle[$k]])){
-					$data[$langTitle[$k]] = $languages;
+					if(!isset($data[$langTitle[$k]])){
+						$data[$langTitle[$k]] = $languages;
+					}
+				} else {
+					array_push($data, array(
+						'language' => $all[0]->lang,
+						'total' => $total,
+						'visible' => $visible,
+						'data' => $all,
+					));
+
 				}
 			}
 		}
-
 		return $data;
 	}
 

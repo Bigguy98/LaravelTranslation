@@ -11,36 +11,14 @@ class Language extends Model {
 	protected $fillable = ['id', 'lang_title'];
 	public $timestamps = false;
 
-	public function getLanguage($user) {
-		$langId = array();
-
-		foreach ($user['permission'] as $key => $permission) {
-			if ($permission->edit) {
-				array_push($langId, $permission->language_id);
-			}
-		}
-
-		if (count($langId) > 0) {
-			return $this->language($langId);
-		} else {
-			return false;
-		}
-	}
-
-	private function language($langId) {
-		sort($langId);
-		return $this::select('lang_title')->whereIn('id', $langId)->get();
-	}
-
 	public function addLang($title) {
 		$obj = array(
 			'table' => 'Languages',
 			'title' => $title,
 		);
 		$id = $this::insertGetId(['lang_title' => $title]);
-		$sqlite = new SqliteLang();
 		if ($id) {
-			$resLite = $sqlite->createLanguage($title);
+			$resLite = SqliteLang::createLanguage($title);
 			if ($resLite) {
 				return $id;
 			}

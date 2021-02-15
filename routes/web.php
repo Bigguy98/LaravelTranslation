@@ -37,17 +37,19 @@ Route::post('/language', 'AdminController@language');
 Route::post('/language/delete', 'AdminController@deleteLanguage');
 
 //Key management routes
-Route::post('/key', 'AdminController@addKey');
+Route::post('/key', 'AdminController@addKey'); 
 
-
+//Admin side translation routes
+Route::post('/popover', 'AdminController@popOver');
 Route::get('/language-by-user/{userId}', 'AdminController@languageByUser');
 
-Route::get('/isAuthenticate', 'AdminController@isAuthenticate');
-
-
-Route::post('/refresh-db', 'AdminController@refreshDB');
-Route::post('/popover', 'AdminController@popOver');
-
+//Row management
 Route::post('/hide-row', "AdminController@hideRow");
 Route::post('/show-row', "AdminController@showRow");
+
+//Other routes ???
+Route::get('/isAuthenticate', 'AdminController@isAuthenticate');
+Route::post('/refresh-db', 'AdminController@refreshDB');
+
+
 

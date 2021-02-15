@@ -25,10 +25,10 @@
                                 {{$key}}
                             </td>
                             <td class="main-table-cell">
-                                <div class="form-control">{{$data['English'][$key]['translation']}}</div>
+                                <div class="form-control">{{clean($data['English'][$key]['translation'])}}</div>
                             </td>
                             <td class="main-table-cell">
-                                <div class="form-control translation" id="{{$key}}" contenteditable="true">{{$element['translation']}}</div>
+                                <div class="form-control translation" id="{{$key}}" contenteditable="true">{{clean($element['translation'])}}</div>
                             </td>
                         </tr>
                         @endif

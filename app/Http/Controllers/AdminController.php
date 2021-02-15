@@ -17,9 +17,7 @@ class AdminController extends Controller {
 	public function adminLogin(Request $request) {
 		$user = $this->getUserByname($request->name);
 		if (!empty($user) && $user->password == $request->password) {
-
 			$user = $this->putSessionUser($request, $user);
-
 			return response()->json(json_encode($user));
 		}
 
@@ -27,25 +25,14 @@ class AdminController extends Controller {
 	}
 
 	public function languageByUser(Request $request, $userId) {
-		$user = User::find($userId);
-		$sqlite = new SqliteLang();
+		$user = (array) DB::table('User')->where('id', $userId)->first();
 		if (!empty($user)) {
 			$user = $this->putSessionUser($request, $user);
-			$language = new Language();
-
-			$result = $language->getLanguage($user);
-
-			if (empty($result)) {
-				return $this->makeResponse("");
-			}
-
 			$hiddenRows = json_decode($this->listOfHiddenRows());
-
-			$data = $sqlite->getDataByUser($result,$hiddenRows,$user->id);
+			$data = SqliteLang::getDataByUser(["English"],$hiddenRows,'admin');
 			if (empty($data)) {
 				return $this->makeErrorResponse('Something went wrong with sqlite languages');
 			}
-
 			return $this->makeResponse($data);
 		}
 
@@ -71,7 +58,6 @@ class AdminController extends Controller {
 		if ($request->session()->has('currentUser')) {
 			return $this->makeSuccessResponse();
 		}
-
 		return $this->makeErrorResponse('No authenticated');
 	}
 
@@ -102,7 +88,6 @@ class AdminController extends Controller {
 		}
 
 		return response()->json($result);
-
 	}
 
 	public function updateLanguage(Request $request) {
@@ -161,7 +146,7 @@ class AdminController extends Controller {
 
 	public function deleteUser(Request $request) {
 		try {
-			$user = User::find($$request->userId);
+			$user = User::find($request->userId);
 			$user->delete();
 			return $this->makeSuccessResponse();
 		} catch (Exception $e) {
@@ -200,7 +185,6 @@ class AdminController extends Controller {
 		} catch (Exception $e) {
 			return $this->makeErrorResponse($e->message);
 		}
-
 	}
 
 	public function popOver(Request $req) {
@@ -219,11 +203,7 @@ class AdminController extends Controller {
 		}
 
 		$req->table = $table;
-		if (!empty($currentUser)) {
-			$req->permission = $currentUser->permission;
-		}
-
-		$translations = $sqlite->getTranslation($req, $currentUser->role_id);
+		$translations = SqliteLang::getTranslation($req);
 
 		if (!empty($translations)) {
 			return $this->makeResponse($translations);
@@ -243,33 +223,13 @@ class AdminController extends Controller {
 	}
 
 	public function putSessionUser($request, $user) {
-		unset($user->password);
-		$permissions = $this->getPermission($user->id);
-		$obj = array();
-		foreach ($permissions as $val) {
-			$obj[$val->lang_title] = array('view' => $val->view, 'edit' => $val->edit, 'id' => $val->language_id);
-		}
-
-		$user->permission = $permissions;
-		$user->newPermission = $obj;
-
 		$request->session()->put('currentUser', $user);
-
 		return $user;
 	}
 
 	private function getUserByname($name) {
 		$user = DB::table('User')->where('name', $name)->first();
 		return $user;
-	}
-
-	public function getPermission($uid) {
-		return DB::table('UserPermission')
-			->select('UserPermission.language_id', 'Languages.lang_title', 'UserPermission.edit', 'UserPermission.view')
-			->join('Languages', 'Languages.id', '=', 'UserPermission.language_id')
-			->where('UserPermission.user_id', '=', $uid)
-			->orderBy('UserPermission.language_id')
-			->get();
 	}
 
 	public function hideRow(Request $request) {

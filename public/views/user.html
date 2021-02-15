@@ -33,7 +33,7 @@
 								{{ value }}
 							</div>
 							<textarea ng-click="getPopoveerContent(language.language, key, langRow.key, langRow)"
-							ng-if="$index > 2 && currentUser.newPermission[language.language].edit == 1"
+							ng-if="$index > 2"
 							uib-popover-template="dynamicPopover.templateUrl"
 							popover-placement="{{dynamicPopover.placement}}"
 							popover-trigger="'outsideClick'"
@@ -41,12 +41,12 @@
 							ng-focus="focus($event)"
 							ng-blur="blur($event)"
 							ng-model="langRow[key]"
-							ng-hide="key == 'visible' || langRow.visible == 0" >
+							ng-hide="key == 'visible'" >
 							</textarea>
 						</td>
 						<td ng-show="{{ currentUser.role_id == 1 }}" >
-							<button type="button" ng-show="{{ langRow.visible == 1 }}" ng-click="hideRow(langRow.key)" class="btn btn-default">Hide</button>
-							<button type="button" ng-show="{{ langRow.visible == 0 }}" ng-click="showRow(langRow.key)" class="btn btn-default">Show</button>
+							<button type="button" ng-show="{{ langRow.visible == 1 }}" ng-click="hideRow(langRow.key)" class="btn btn-success">Hide</button>
+							<button type="button" ng-show="{{ langRow.visible == 0 }}" ng-click="showRow(langRow.key)" class="btn btn-danger">Show</button>
 						</td>
 					</tr>
 				</tbody>

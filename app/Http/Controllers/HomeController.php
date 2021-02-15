@@ -27,19 +27,17 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $sqlite = new SqliteLang();
-
         $language = trim(str_replace('@iqualif.com', '', $user->email));
-        $hiddenRows = $this->listOfHiddenRows();    
+        $hiddenRows = self::listOfHiddenRows();    
         $languages = ['English', $language];
-        $data = $sqlite->getDataByUser($languages,$hiddenRows,$user->id);
+        $data = SqliteLang::getDataByUser($languages,$hiddenRows,'user');
 
         return view('home', ['data'=>$data,'language'=>$language]);
     }
 
-    private function listOfHiddenRows(){
+    private static function listOfHiddenRows(){
+        
         $hiddenRows = [];
-
         $rows = HiddenRow::get(['key']);
            $keys = collect($rows)->map(function ($item, $key) {
                 return $item->key;
@@ -53,12 +51,11 @@ class HomeController extends Controller
     }
 
     public function updateTranslation(Request $request) {
-
-        $sqlite = new SqliteLang();
-        if ($sqlite->updateTranslation($request)) {
+        
+        if (SqliteLang::updateTranslation($request)) {
             return '';
         }
-
         return $this->makeErrorResponse("Something wrong");
     }
+
 }
