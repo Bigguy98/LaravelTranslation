@@ -26,6 +26,20 @@ angular.module('appRoutes', ['ui.router', 'ngStorage'])
 					}
 				}
 			})
+			.state('backup', {
+				url: '/backup',
+				templateUrl: 'views/backup.html',
+				controller: 'BackupController',
+				resolve: {
+					goto: function($q, $rootScope){
+						var deferred = $q.defer();
+						if($rootScope.currentUser.role_id == 1) deferred.resolve();
+						else deferred.reject();
+
+						return deferred.promise;
+					}
+				}
+			})
 			.state('user', {
 				url: '/user',
 				templateUrl: 'views/user.html',

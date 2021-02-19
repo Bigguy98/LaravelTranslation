@@ -47,6 +47,9 @@ Route::get('/language-by-user/{userId}', 'AdminController@languageByUser');
 Route::post('/hide-row', "AdminController@hideRow");
 Route::post('/show-row', "AdminController@showRow");
 
+//Backups
+Route::get('/backups', 'BackupController@index');
+
 //Other routes ???
 Route::get('/isAuthenticate', 'AdminController@isAuthenticate');
 Route::post('/refresh-db', 'AdminController@refreshDB');
