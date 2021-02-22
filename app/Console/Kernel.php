@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use Artisan;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -24,7 +25,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('bd:dump')->cron('0 */6 * * *');
+        $schedule->call(function (){
+            Artisan::call("bd:dump");
+        })->twiceDaily(1, 13);
     }
 
     /**

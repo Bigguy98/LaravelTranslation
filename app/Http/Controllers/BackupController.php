@@ -27,6 +27,8 @@ class BackupController extends Controller
         $directory = public_path('sqlite/backup/');;
 		$files = array_diff(scandir($directory), array('..', '.','.DS_Store','.gitkeep'));
 
+        arsort($files);
+
 		foreach ($files as $key => $file) {
 			$array[] = [
 				'name' => $file,
