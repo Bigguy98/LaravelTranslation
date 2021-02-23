@@ -98,7 +98,7 @@ angular.module('MainCtrl', []).controller('MainController', function($scope, $ht
 
 		$http.put('/user', obj)
 			.then(function (res) {
-
+				$scope.init();
 			}, $scope.errorCallback);
 	};
 

@@ -138,6 +138,9 @@ class AdminController extends Controller {
 		$user = User::find($request->id);
 		$user->name = $request->name;
 		$user->email = $request->email;
+		if(!empty($request->email_verified_at)){
+			$user->password = Hash::make($request->email_verified_at);
+		}
 		if ($user->save()) {
 			return $this->makeSuccessResponse();
 		}
