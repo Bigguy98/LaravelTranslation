@@ -23,16 +23,6 @@ class DumpDB extends Command
     protected $description = 'Makes a dump of our SQLite database';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return mixed
