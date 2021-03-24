@@ -129,9 +129,12 @@ class SqliteLang extends Model {
 	}
 
 	public static function insertKey($table,$key){
-		DB::connection('sqlite')->table($table)->insert(
-		    ['key' => $key, 'translation' => '']
-		);
+		$current = DB::connection('sqlite')->table($table)->where('key',$key)->first();
+		if(empty($current)){
+			DB::connection('sqlite')->table($table)->insert(
+			    ['key' => $key, 'translation' => '']
+			);
+		}                                           
 	}
 
 }
