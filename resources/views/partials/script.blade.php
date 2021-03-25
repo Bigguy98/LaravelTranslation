@@ -10,14 +10,20 @@
 	        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 	      }
 	    });
-
-	    $.post("{{route('update')}}", {'key':key, 'translation':translation}, function (data) {
-	        if(data == ''){
+	    
+		$.ajax({
+		 	url: "{{route('update')}}",
+		 	method: "POST",
+		 	data: {'key':key, 'translation':translation}
+		}).done(function(data) {
+		 	if(data == ''){
 	            $.toast({type: 'info', text: "Saved"});
 	        }else{
-	            $.toast({type: 'warning', text: "Something went wrong"});
+	            $.toast({type: 'error', text: "An error occurred"});
 	        }
-	    });
+		}).fail(function( jqXHR, textStatus ) {
+		  	$.toast({type: 'error', text: "An error occurred"});
+		});
 	});
 
 	$('.btn-show-keys').on('click', function(){
