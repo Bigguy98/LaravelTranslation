@@ -45,6 +45,7 @@ class RemoveTags extends Command
                 if(!in_array($key->key, self::$exclude)){
                     $value = DB::connection('sqlite')->table($table->name)->where('key',$key->key)->first();
                     $translation = strip_tags($value->translation);
+                    $translation = str_replace('&lt;br&gt;', '', $translation);
                     DB::connection('sqlite')->table($table->name)->where('key',$key->key)->update(['translation' => $translation]);
                 }   
             }  
