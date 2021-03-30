@@ -5,14 +5,18 @@ function clean($text){
         'amp;',
         '&lt;',
         '&gt;',
-        '&nbsp;'
+        '&nbsp;',
+        '<span style="font-size: 14.4px;">',
+        '</span>'
     ];
 
     $replace = [
         '',
         '<',
         '>',
-        ' '
+        ' ',
+        '',
+        ''
     ];
 
     return str_replace($search, $replace, $text);

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 class SqliteLang extends Model {
 
 	protected $connection = 'sqlite';
+    private static $exclude = ['dlg_hlp_text'];
 
 	public static function getTableNames() {
 		$names = DB::connection('sqlite')->select("SELECT name FROM sqlite_master WHERE type='table' AND name <> 'sqlite_stat3' AND name <> 'sqlite_stat1'");
@@ -53,10 +54,16 @@ class SqliteLang extends Model {
 
 	public static function updateTranslation($data) {
 		$language = trim(str_replace('@iqualif.com', '', Auth::user()->email));
+	
+		if(in_array($data->key, self::$exclude)){
+			$translation = $data->translation;
+		}else{
+			$translation = strip_tags(clean($data->translation));
+		}
 
 		$row = DB::connection('sqlite')->table($language)
 			->where('key', '=', $data->key)
-			->update(['translation' => $data->translation]);
+			->update(['translation' => $translation]);
 		return true;
 	}
 
