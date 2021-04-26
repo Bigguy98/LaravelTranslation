@@ -42,6 +42,7 @@ Route::post('/key', 'AdminController@addKey');
 //Admin side translation routes
 Route::post('/popover', 'AdminController@popOver');
 Route::get('/language-by-user/{userId}', 'AdminController@languageByUser');
+Route::post('/update-translation-by-admin', 'AdminController@updateTranslationAdmin');
 
 //Row management
 Route::post('/hide-row', "AdminController@hideRow");

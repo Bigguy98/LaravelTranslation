@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use DB;
-use App\SqliteLang;
+use App\Models\SqliteLang;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 

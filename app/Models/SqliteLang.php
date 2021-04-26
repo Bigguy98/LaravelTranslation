@@ -1,6 +1,5 @@
 <?php
-namespace App;
-
+namespace App\Models;
 
 use Auth;
 use Illuminate\Support\Facades\Schema;
@@ -62,6 +61,19 @@ class SqliteLang extends Model {
 		}
 
 		$row = DB::connection('sqlite')->table($language)
+			->where('key', '=', $data->key)
+			->update(['translation' => $translation]);
+		return true;
+	}
+
+	public static function updateTranslationAdmin($data) {
+		if(in_array($data->key, self::$exclude)){
+			$translation = $data->value;
+		}else{
+			$translation = strip_tags(clean($data->value));
+		}
+
+		$row = DB::connection('sqlite')->table($data->lang)
 			->where('key', '=', $data->key)
 			->update(['translation' => $translation]);
 		return true;

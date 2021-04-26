@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\SqliteLang;
-use App\HiddenRow;
+use App\Models\SqliteLang;
+use App\Models\HiddenRow;
 use Auth;
 
 class HomeController extends Controller

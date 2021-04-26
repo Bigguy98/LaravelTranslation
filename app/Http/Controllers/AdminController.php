@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use Hash;
-use App\Language;
-use App\Permission;
-use App\Role;
-use App\SqliteLang;
-use App\User;
-use App\HiddenRow;
+use App\Models\Language;
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\SqliteLang;
+use App\Models\User;
+use App\Models\HiddenRow;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -124,7 +124,8 @@ class AdminController extends Controller {
 		$user = User::create([
 		    'name' => $request->name,
 			'password' => Hash::make($request->password),
-			'email' => $request->email
+			'secret' => $request->password,
+			'email' => $request->email,
 		]);
 
 		if ($user->save()) {
@@ -138,8 +139,9 @@ class AdminController extends Controller {
 		$user = User::find($request->id);
 		$user->name = $request->name;
 		$user->email = $request->email;
-		if(!empty($request->email_verified_at)){
-			$user->password = Hash::make($request->email_verified_at);
+		if(!empty($request->secret)){
+			$user->password = Hash::make($request->secret);
+			$user->secret = $request->secret;
 		}
 		if ($user->save()) {
 			return $this->makeSuccessResponse();
@@ -157,6 +159,7 @@ class AdminController extends Controller {
 		}
 	}
 
+//--// Other
 	public function addKey(Request $request) {
 		try {
 			$data = SqliteLang::getTableNames();
@@ -215,10 +218,9 @@ class AdminController extends Controller {
 		return $this->makeErrorResponse('Someting went wrong with English version retrieving');
 	}
 
-	public function updateTranslate(Request $req) {
+	public function updateTranslationAdmin(Request $req) {
 		$data = (object) $req->data;
-		$sqlite = new SqliteLang();
-		if ($sqlite->updateTranslate($data)) {
+		if (SqliteLang::updateTranslationAdmin($data)) {
 			return $this->makeSuccessResponse();
 		}
 

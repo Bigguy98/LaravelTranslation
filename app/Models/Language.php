@@ -1,7 +1,7 @@
 <?php
-namespace App;
+namespace App\Models;
 
-use App\SqliteLang;
+use App\Models\SqliteLang;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 

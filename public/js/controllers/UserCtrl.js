@@ -74,7 +74,7 @@ angular.module('UserCtrl', []).controller('UserController', function($scope, $ht
 
 		if($scope.originalValue != targetValue) {
 			$scope.currentItem.value = targetValue;
-			$http.post('/update-translate', {data: $scope.currentItem})
+			$http.post('/update-translation-by-admin', {data: $scope.currentItem})
 				.then(function (res) {
 					if(res) console.log('field updated');
 					else console.log('update field failure');
@@ -86,7 +86,7 @@ angular.module('UserCtrl', []).controller('UserController', function($scope, $ht
 
 	$scope.saveChanges = function () {
 		$scope.currentItem.value = $scope.originalTarget.value;
-		$http.post('/update-translate', {data: $scope.currentItem})
+		$http.post('/update-translation-by-admin', {data: $scope.currentItem})
 			.then(function (res) {
 				if(res) console.log('field updated');
 				else console.log('update field failure');
