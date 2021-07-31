@@ -16,4 +16,11 @@ angular.module('BackupCtrl', []).controller('BackupController', function($scope,
 
 	$scope.errorCallback = function(err) { console.log(err); }
 
+	$scope.commit = function () {
+		$http.post('/commit')
+			.then(function (res) {
+				var result = JSON.parse(res.data);
+		}, $scope.errorCallback);
+	};
+
 });

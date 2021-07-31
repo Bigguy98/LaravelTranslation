@@ -50,6 +50,7 @@ Route::post('/show-row', "AdminController@showRow");
 
 //Backups
 Route::get('/backups', 'BackupController@index');
+Route::post('/commit', 'BackupController@commit');
 
 //Other routes ???
 Route::get('/isAuthenticate', 'AdminController@isAuthenticate');
