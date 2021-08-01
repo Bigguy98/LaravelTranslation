@@ -50,9 +50,12 @@ class BackupController extends Controller
         shell_exec("cd /var/www/static && sudo -u ubuntu git checkout -b 'from-".date("Y-m-d")."'");
         shell_exec("sudo -u ubuntu cp /var/www/sqlite-laravel/database/sqlite/language.sqlite /var/www/static/src/main/resources/md/r/l.roa");
         shell_exec("sudo -u ubuntu sqlite3 /var/www/static/src/main/resources/md/r/l.roa \"VACUUM;\"");
+        shell_exec("cd /var/www/static && sudo -u ubuntu git checkout 'from-".date("Y-m-d")."'");
         shell_exec("cd /var/www/static && sudo -u ubuntu git add .");
         shell_exec("cd /var/www/static && sudo -u ubuntu git commit -m 'language-db-update-from-".date("Y-m-d")."'");
         shell_exec("cd /var/www/static && sudo -u ubuntu git push --set-upstream origin from-".date("Y-m-d")." -o  merge_request.create -o merge_request.target=master -o merge_request.remove_source_branch -o merge_request.title=New-DB-version");
+        shell_exec("cd /var/www/static && sudo -u ubuntu git checkout master");
+        shell_exec("cd /var/www/static && sudo -u ubuntu git branch -D from-".date("Y-m-d"));
         echo 'ok';
     }
 }
