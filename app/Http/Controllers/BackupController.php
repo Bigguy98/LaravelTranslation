@@ -43,10 +43,10 @@ class BackupController extends Controller
      * Performs db commit and make merge request
      *
      * @return +/- about operation execution
-        shell_exec("cd /var/www/static && sudo -u ubuntu git pull");
      */
     public function commit(){
         shell_exec("cd /var/www/static && sudo -u ubuntu git checkout master");
+        shell_exec("cd /var/www/static && sudo -u ubuntu git pull");
         shell_exec("cd /var/www/static && sudo -u ubuntu git checkout -b 'from-".date("Y-m-d")."'");
         shell_exec("sudo -u ubuntu cp /var/www/sqlite-laravel/database/sqlite/language.sqlite /var/www/static/src/main/resources/md/r/l.roa");
         shell_exec("sudo -u ubuntu sqlite3 /var/www/static/src/main/resources/md/r/l.roa \"VACUUM;\"");
