@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Artisan;
 use Illuminate\Http\Request;
 
 class BackupController extends Controller
@@ -37,6 +38,16 @@ class BackupController extends Controller
 		}
 
         return json_encode($array);
+    }
+
+    /**
+     * Makes as force db backup
+     *
+     * @return +/- about operation execution
+     */
+    public function backup(){
+        Artisan::call("db:dump");
+        echo 'ok';
     }
 
     /**

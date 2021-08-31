@@ -2,6 +2,7 @@ angular.module('BackupCtrl', []).controller('BackupController', function($scope,
 
 	$scope.backups = null;
 	$scope.status = 'awaiting';
+	$scope.state = 'awaiting';
 
 	$scope.getBackUpsList = function () {
 		$http.get('/backups').then(function (res) {
@@ -16,6 +17,7 @@ angular.module('BackupCtrl', []).controller('BackupController', function($scope,
 	$scope.init();
 
 	$scope.errorCallback = function(err) { console.log(err); $scope.status = 'fail'; }
+	$scope.errorCallbackBackup = function(err) { console.log(err); $scope.state = 'fail'; }
 
 	$scope.commit = function () {
 		$scope.status = 'processing';
@@ -26,6 +28,18 @@ angular.module('BackupCtrl', []).controller('BackupController', function($scope,
 				$scope.status = 'fail';
 			}
 		}, $scope.errorCallback);	
+	};
+
+	$scope.backup = function () {
+		$scope.state = 'processing';
+		$http.post('/backup').then(function (res) {
+			if(res.data == 'ok'){
+				$scope.state = 'success';
+				$scope.getBackUpsList();
+			}else{
+				$scope.state = 'fail';
+			}
+		}, $scope.errorCallbackBackup);	
 	};
 
 });

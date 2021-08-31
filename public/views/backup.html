@@ -32,17 +32,30 @@
 		</div>
 		<div class="col-md-6 col-sm-12 scroll">
 			<br><br>
+			
+			<h4 ng-show="state == 'awaiting'">Backup Section</h4>
+			<h4 ng-show="state == 'processing'">Backup Section - Processing...</h4>
+			<h4 ng-show="state == 'success'">Backup Section - Success ✅</h4>
+			<h4 ng-show="state == 'fail'">Backup Section - Fail ❌ </h4>
+			<p>Click the button bellow to make a backup.</p>
+			<form class="form-inline" id="backupForm" name="backupForm" ng-submit="backup()">
+				<div class="form-group">
+					<button type="submit" class="btn btn-default">Make Backup</button>
+				</div>
+			</form>
+			<hr>
+			
 			<h4 ng-show="status == 'awaiting'">Commit Section</h4>
 			<h4 ng-show="status == 'processing'">Commit Section - Processing...</h4>
 			<h4 ng-show="status == 'success'">Commit Section - Success ✅</h4>
 			<h4 ng-show="status == 'fail'">Commit Section - Fail ❌ </h4>
-
 			<p>Click the button bellow to make a commit of the languages.sqlite file and send it to GitLab repository.</p>
 			<form class="form-inline" id="commitForm" name="commitForm" ng-submit="commit()">
 				<div class="form-group">
 					<button type="submit" class="btn btn-default">Send file to GitLab</button>
 				</div>
 			</form>
+
 			<hr>
 		</div>	
 	</div>
