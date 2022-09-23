@@ -30,7 +30,7 @@ class DumpDB extends Command
     public function handle()
     {
 
-        $time = date('Y-m-d H:i', time());
+        $time = date('YmdHis', time());
         $path = database_path('sqlite/language.sqlite');
 
         $parts = explode('/',$path);
@@ -41,7 +41,7 @@ class DumpDB extends Command
         $filename = implode('.', $name_parts);
 
         $file = file_get_contents($path); 
-        $path = public_path('sqlite/backup/'.$filename.'|'.$time.'|.'.$extension);  
+        $path = public_path('sqlite/backup/'.$filename.$time.'.'.$extension);  
         file_put_contents($path, $file);
 
     }
